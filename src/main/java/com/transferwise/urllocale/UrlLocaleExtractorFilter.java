@@ -1,0 +1,56 @@
+package com.transferwise.urllocale;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class UrlLocaleExtractorFilter implements Filter {
+    private static final Pattern URL_PATTERN = Pattern.compile("^/([a-z]{2})(/.*)$");
+    static final String URL_LOCALE_ATTRIBUTE = "urlLocale";
+
+    private final Map<String, Locale> localeMapping;
+
+    UrlLocaleExtractorFilter(Map<String, Locale> localeMapping) {
+        this.localeMapping = localeMapping;
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
+
+    @Override
+    public void doFilter(
+        ServletRequest request,
+        ServletResponse response,
+        FilterChain chain
+    ) throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
+
+        Matcher matcher = URL_PATTERN.matcher(req.getServletPath());
+        if (matcher.matches()) {
+            String mapping = matcher.group(1);
+            if (!localeMapping.containsKey(mapping)) {
+                throw new MappingNotSupported(mapping);
+            }
+            request.setAttribute(URL_LOCALE_ATTRIBUTE, localeMapping.get(mapping));
+            RequestDispatcher dispatcher = request.getRequestDispatcher(matcher.group(2));
+            dispatcher.forward(request, response);
+        } else {
+            chain.doFilter(request, response);
+        }
+    }
+
+    @Override
+    public void destroy() {
+    }
+
+    public static class MappingNotSupported extends RuntimeException {
+        MappingNotSupported(String mapping) {
+            super("Url locale mapping \"" + mapping+"\" not supported");
+        }
+    }
+}
