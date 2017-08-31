@@ -34,7 +34,8 @@ public class UrlLocaleExtractorFilter implements Filter {
         if (matcher.matches()) {
             String mapping = matcher.group(1);
             if (!localeMapping.containsKey(mapping)) {
-                throw new MappingNotSupported(mapping);
+                chain.doFilter(request, response);
+                return;
             }
             request.setAttribute(URL_LOCALE_ATTRIBUTE, localeMapping.get(mapping));
             RequestDispatcher dispatcher = request.getRequestDispatcher(matcher.group(2));
@@ -46,11 +47,5 @@ public class UrlLocaleExtractorFilter implements Filter {
 
     @Override
     public void destroy() {
-    }
-
-    public static class MappingNotSupported extends RuntimeException {
-        MappingNotSupported(String mapping) {
-            super("Url locale mapping \"" + mapping+"\" not supported");
-        }
     }
 }
