@@ -14,7 +14,7 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.transferwise:url-locale-starter:2.0.0'
+    compile 'com.github.transferwise.url-locale:url-locale-starter:2.0.0'
 }
 ```
 
