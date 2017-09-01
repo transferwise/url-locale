@@ -27,9 +27,9 @@ class UrlLocaleEncodingFilterSpec extends Specification {
             processedUrl == expectedUrl
 
         where:
-            url                     | expectedUrl
-            '/absolute'             | '/gb/absolute'
-            'http://example.com'    | 'http://example.com'
-            'relative/path'         | 'relative/path'
+            url                  | expectedUrl
+            '/absolute'          | '/gb/absolute'
+            'http://example.com' | 'http://example.com'
+            'relative/path'      | 'relative/path'
     }
 }

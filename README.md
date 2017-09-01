@@ -14,8 +14,14 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.transferwise:url-locale:1.1.0'
+    compile 'com.github.transferwise:url-locale-starter:2.0.0'
 }
+```
+
+If you want to use the servlet filters by your own avoiding auto-configuration, just include the `url-locale` package
+
+```gradle
+compile 'com.github.transferwise:url-locale:2.0.0'
 ```
 
 ## Usage
