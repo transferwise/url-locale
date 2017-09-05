@@ -1,4 +1,4 @@
 rootProject.name= 'url-locale'
 
-include 'url-locale'
+include 'url-locale-core'
 include 'url-locale-starter'

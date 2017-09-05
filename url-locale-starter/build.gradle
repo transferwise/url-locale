@@ -1,5 +1,5 @@
 dependencies {
-    compile project(':url-locale')
+    compile project(':url-locale-core')
 
     compile 'org.springframework.boot:spring-boot-autoconfigure:1.5.6.RELEASE'
     compile 'org.projectlombok:lombok:1.16.18'
