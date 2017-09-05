@@ -14,14 +14,14 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.transferwise.url-locale:url-locale-starter:2.0.0'
+    compile 'com.github.transferwise.url-locale:url-locale-starter:2.1.0'
 }
 ```
 
 If you want to use the servlet filters by your own avoiding auto-configuration, just include the `url-locale` package
 
 ```gradle
-compile 'com.github.transferwise:url-locale:2.0.0'
+compile 'com.github.transferwise:url-locale:2.1.0'
 ```
 
 ## Usage
@@ -34,7 +34,7 @@ If you are using a template engine like Thymeleaf, links on the form `@{/home}` 
 
 ### Localized routes
 
-There is no need to handle localized URLs in your application, your controllers will be agnostic of the presence of a locale in the path. 
+There is no need to handle localized URLs in your application, your controllers will be agnostic of the presence of a locale in the path.
 
 ### Available locales
 
@@ -63,15 +63,3 @@ url-locale:
 
 * The `fallback` is the default locale it would be inferred when there is no mapping present in the URL.
 * The `mapping` is a key-value configuration for the locale mappings you'll want to offer in your app. 
-
-
-#### URL app rewriting
-
-A very common use case for proxied production environments is to rewrite URLs to move the locale around. This is specially useful to avoid doing it in the reverse proxy.
-
-```yaml
-url-locale:
-  rewrite: /$1/app/$2
-```
-
-In this example every URL, with a locale of `es` on the form `/es/page` will be translated to `/es/app/page`.

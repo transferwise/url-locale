@@ -9,8 +9,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UrlLocaleExtractorFilter implements Filter {
-    private static final Pattern URL_PATTERN = Pattern.compile("^/([a-z]{2})(/.*)$");
     static final String URL_LOCALE_ATTRIBUTE = "urlLocale";
+    static final String URL_LOCALE_MAPPING_ATTRIBUTE = "urlLocaleMapping";
+    private static final Pattern URL_PATTERN = Pattern.compile("^/([a-z]{2})(/.*)$");
 
     private final Map<String, Locale> localeMapping;
 
@@ -37,6 +38,7 @@ public class UrlLocaleExtractorFilter implements Filter {
                 chain.doFilter(request, response);
                 return;
             }
+            request.setAttribute(URL_LOCALE_MAPPING_ATTRIBUTE, mapping);
             request.setAttribute(URL_LOCALE_ATTRIBUTE, localeMapping.get(mapping));
             RequestDispatcher dispatcher = request.getRequestDispatcher(matcher.group(2));
             dispatcher.forward(request, response);

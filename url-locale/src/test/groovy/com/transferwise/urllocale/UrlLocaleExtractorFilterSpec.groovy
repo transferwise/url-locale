@@ -30,6 +30,7 @@ class UrlLocaleExtractorFilterSpec extends Specification {
         then:
         interaction {
             storesLocaleInAttribute(Locale.UK)
+            storesLocaleMappingInAttribute('gb')
             dispatchesRequestTo('/')
         }
     }
@@ -62,6 +63,10 @@ class UrlLocaleExtractorFilterSpec extends Specification {
 
     private storesLocaleInAttribute(Locale locale) {
         1 * request.setAttribute(UrlLocaleExtractorFilter.URL_LOCALE_ATTRIBUTE, locale)
+    }
+
+    private storesLocaleMappingInAttribute(String mapping) {
+        1 * request.setAttribute(UrlLocaleExtractorFilter.URL_LOCALE_MAPPING_ATTRIBUTE, mapping)
     }
 
     private dispatchesRequestTo(String path) {
