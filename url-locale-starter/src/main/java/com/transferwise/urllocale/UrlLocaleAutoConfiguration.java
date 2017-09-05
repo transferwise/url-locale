@@ -1,8 +1,6 @@
 package com.transferwise.urllocale;
 
-import com.transferwise.cable.UrlRewriteFilter;
 import lombok.Data;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -25,7 +23,6 @@ public class UrlLocaleAutoConfiguration {
             put("gb", "en-GB");
         }};
         private String fallback = "en-gb";
-        private String rewrite;
     }
 
     @Bean
@@ -35,15 +32,9 @@ public class UrlLocaleAutoConfiguration {
     }
 
     @Bean
-    public Map<Locale, String> reverseLocaleMapping(Map<String, Locale> localeMapping) {
-        return localeMapping.entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
-    }
-
-    @Bean
-    public LocaleResolver localeResolver(UrlLocaleProperties config, Map<Locale, String> reverseLocaleMapping) {
+    public LocaleResolver localeResolver(UrlLocaleProperties config, Map<String, Locale> localeMapping) {
         Locale fallback = Locale.forLanguageTag(config.getFallback());
-        if (!reverseLocaleMapping.containsKey(fallback)) {
+        if (!localeMapping.values().contains(fallback)) {
             throw new RuntimeException("No mapping defined for fallback \"" + config.getFallback() + "\"");
         }
         return new UrlLocaleResolver(fallback);
@@ -58,17 +49,10 @@ public class UrlLocaleAutoConfiguration {
     }
 
     @Bean
-    public FilterRegistrationBean urlLocaleEncodingFilter(Map<Locale, String> reverseLocaleMapping) {
+    public FilterRegistrationBean urlLocaleEncodingFilter() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new UrlLocaleEncodingFilter(reverseLocaleMapping));
+        registration.setFilter(new UrlLocaleEncodingFilter());
         registration.setOrder(20);
         return registration;
-    }
-
-    @Bean
-    @ConditionalOnProperty("url-locale.rewrite")
-    public UrlRewriteFilter urlRewriteFilter(UrlLocaleProperties config) {
-        return new UrlRewriteFilter()
-            .rewrite("^/([a-z]{2})/(.*)$", config.getRewrite());
     }
 }

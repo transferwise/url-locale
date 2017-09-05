@@ -1,30 +1,28 @@
 package com.transferwise.urllocale;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.Map;
+
+import static com.transferwise.urllocale.UrlLocaleExtractorFilter.URL_LOCALE_MAPPING_ATTRIBUTE;
 
 public class UrlLocaleEncodingFilter implements Filter {
-    private final Map<Locale, String> localeMapping;
-
-    UrlLocaleEncodingFilter(Map<Locale, String> localeMapping) {
-        this.localeMapping = localeMapping;
-    }
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
     @Override
     public void doFilter(
-        ServletRequest request,
-        ServletResponse response,
-        FilterChain chain
+            ServletRequest request,
+            ServletResponse response,
+            FilterChain chain
     ) throws IOException, ServletException {
-        chain.doFilter(request, new LocaleUrlWrappedResponse((HttpServletResponse) response, localeMapping));
+        chain.doFilter(request, new LocaleUrlWrappedResponse(
+                (HttpServletRequest) request,
+                (HttpServletResponse) response
+        ));
     }
 
     @Override
@@ -32,13 +30,13 @@ public class UrlLocaleEncodingFilter implements Filter {
     }
 
     static class LocaleUrlWrappedResponse extends HttpServletResponseWrapper {
+        private final HttpServletRequest request;
         private final HttpServletResponse response;
-        private final Map<Locale, String> localeMapping;
 
-        LocaleUrlWrappedResponse(HttpServletResponse response, Map<Locale, String> localeMapping) {
+        LocaleUrlWrappedResponse(HttpServletRequest request, HttpServletResponse response) {
             super(response);
+            this.request = request;
             this.response = response;
-            this.localeMapping = localeMapping;
         }
 
         @Override
@@ -53,8 +51,8 @@ public class UrlLocaleEncodingFilter implements Filter {
         }
 
         private String prefixMapping(String url) {
-            if (url.startsWith("/")) {
-                String mapping = localeMapping.get(getResponse().getLocale());
+            String mapping = (String) request.getAttribute(URL_LOCALE_MAPPING_ATTRIBUTE);
+            if (url.startsWith("/") && mapping != null) {
                 return response.encodeURL("/" + mapping + url);
             }
 

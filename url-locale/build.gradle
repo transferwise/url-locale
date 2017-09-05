@@ -1,5 +1,4 @@
 dependencies {
-    compile 'com.github.transferwise:cable:1.0.1'
     compile 'javax.servlet:javax.servlet-api:3.1.0'
     compile 'org.springframework:spring-webmvc:4.3.10.RELEASE'
 
