@@ -29,7 +29,7 @@ public class UrlLocaleEncodingFilter implements Filter {
     public void destroy() {
     }
 
-    static class LocaleUrlWrappedResponse extends HttpServletResponseWrapper {
+    private static class LocaleUrlWrappedResponse extends HttpServletResponseWrapper {
         private final HttpServletRequest request;
         private final HttpServletResponse response;
 

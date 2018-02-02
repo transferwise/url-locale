@@ -15,7 +15,7 @@ public class UrlLocaleExtractorFilter implements Filter {
 
     private final Map<String, Locale> localeMapping;
 
-    UrlLocaleExtractorFilter(Map<String, Locale> localeMapping) {
+    public UrlLocaleExtractorFilter(Map<String, Locale> localeMapping) {
         this.localeMapping = localeMapping;
     }
 

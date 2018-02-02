@@ -11,7 +11,7 @@ import static com.transferwise.urllocale.UrlLocaleExtractorFilter.URL_LOCALE_ATT
 public class UrlLocaleResolver implements LocaleResolver {
     private final Locale fallback;
 
-    UrlLocaleResolver(Locale fallback) {
+    public UrlLocaleResolver(Locale fallback) {
         this.fallback = fallback;
     }
 
