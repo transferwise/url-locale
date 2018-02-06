@@ -34,7 +34,7 @@ public class UrlLocaleExtractorFilter implements Filter {
         Matcher matcher = URL_PATTERN.matcher(req.getServletPath());
         if (matcher.matches()) {
             String mapping = matcher.group(1);
-            if (!localeMapping.containsKey(mapping)) {
+            if (request.getAttribute(URL_LOCALE_ATTRIBUTE) != null || !localeMapping.containsKey(mapping)) {
                 chain.doFilter(request, response);
                 return;
             }
