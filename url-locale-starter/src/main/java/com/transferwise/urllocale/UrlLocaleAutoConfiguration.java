@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
 
+import javax.servlet.DispatcherType;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class UrlLocaleAutoConfiguration {
     @Bean
     public Map<String, Locale> localeMapping(UrlLocaleProperties config) {
         return config.getMapping().entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, e -> Locale.forLanguageTag(e.getValue())));
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> Locale.forLanguageTag(e.getValue())));
     }
 
     @Bean
@@ -45,6 +46,13 @@ public class UrlLocaleAutoConfiguration {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new UrlLocaleExtractorFilter(localeMapping));
         registration.setOrder(10);
+        registration.setDispatcherTypes(
+                DispatcherType.FORWARD,
+                DispatcherType.INCLUDE,
+                DispatcherType.REQUEST,
+                DispatcherType.ASYNC,
+                DispatcherType.ERROR
+        );
         return registration;
     }
 
@@ -53,6 +61,14 @@ public class UrlLocaleAutoConfiguration {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new UrlLocaleEncodingFilter());
         registration.setOrder(20);
+        registration.setDispatcherTypes(
+                DispatcherType.FORWARD,
+                DispatcherType.INCLUDE,
+                DispatcherType.REQUEST,
+                DispatcherType.ASYNC,
+                DispatcherType.ERROR
+        );
         return registration;
     }
+
 }
