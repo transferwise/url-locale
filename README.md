@@ -1,4 +1,4 @@
-# URL Locale [![CircleCI](https://circleci.com/gh/transferwise/url-locale/tree/master.svg?style=shield)](https://circleci.com/gh/transferwise/url-locale/tree/master)
+# URL Locale [![CircleCI](https://circleci.com/gh/transferwise/url-locale/tree/master.svg?style=shield)](https://circleci.com/gh/transferwise/url-locale/tree/master) [![GitHub release](https://jitpack.io/v/transferwise/url-locale.svg)](https://github.com/transferwise/url-locale/releases/latest)
 
 URL locale servlet filters and auto-configuration to setup your application locale through the URL.
 
@@ -14,14 +14,14 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.transferwise.url-locale:url-locale-starter:2.1.3'
+    compile 'com.github.transferwise.url-locale:url-locale-starter:2.1.4'
 }
 ```
 
 If you want to use the servlet filters by your own avoiding auto-configuration, just include the `url-locale-core` dependency
 
 ```gradle
-compile 'com.github.transferwise.url-locale:url-locale-core:2.1.3'
+compile 'com.github.transferwise.url-locale:url-locale-core:2.1.4'
 ```
 
 ## Usage
