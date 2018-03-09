@@ -45,6 +45,31 @@ You can inject the locale mapping in any service or controller you might need it
 private Map<String, Locale> localeMapping;
 ```
 
+### Available request parameters
+
+You also have the locale and the locale mapping available in requests.
+
+#### Spring controllers
+
+```java
+@RequestMapping("/do-something")
+public String doSomething(@RequestAttribute("urlLocaleMapping") String urlLocaleMapping) {
+    if (urlLocaleMapping.equals("gb")) {
+        return doSomethingForUK();
+    }
+    
+    return "view";
+}
+```
+
+#### Thymeleaf templates
+
+```html
+<div th:if="${urlLocaleMapping == 'gb'}">
+    Some stuff for UK 
+</div>
+```
+
 ## Configuration
 
 You'll need to configure the url-locale mapping. In your `application.yml`
