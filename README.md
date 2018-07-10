@@ -14,27 +14,19 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.transferwise.url-locale:url-locale-starter:2.1.4'
+    compile 'com.github.transferwise.url-locale:url-locale-starter:3.0.0'
 }
 ```
 
 If you want to use the servlet filters by your own avoiding auto-configuration, just include the `url-locale-core` dependency
 
 ```gradle
-compile 'com.github.transferwise.url-locale:url-locale-core:2.1.4'
+compile 'com.github.transferwise.url-locale:url-locale-core:3.0.0'
 ```
 
 ## Usage
 
 The package includes all the necessary auto-wiring for Spring Boot, so there is no need to do any extra work apart from the configuration.
-
-### Localized links
-
-If you are using a template engine like Thymeleaf, links on the form `@{/home}` will be automatically translated to `/gb/home` based on the locale of the request.
-
-### Localized routes
-
-There is no need to handle localized URLs in your application, your controllers will be agnostic of the presence of a locale in the path.
 
 ### Available locales
 
@@ -51,21 +43,26 @@ You also have the locale and the locale mapping available in requests.
 
 #### Spring controllers
 
+
 ```java
-@RequestMapping("/do-something")
-public String doSomething(@RequestAttribute("urlLocaleMapping") String urlLocaleMapping) {
-    if (urlLocaleMapping.equals("gb")) {
-        return doSomethingForUK();
+@Controller
+@RequestMapping("/{locale:[a-z]{2}}")
+class MyController {
+    @GetMapping("/do-something")
+    public String doSomething(@RequestAttribute("urlLocaleMapping") String urlLocaleMapping) {
+        if (urlLocaleMapping.equals("gb")) {
+            return doSomethingForUK();
+        }
+        
+        return "view";
     }
-    
-    return "view";
 }
 ```
 
 #### Thymeleaf templates
 
 ```html
-<div th:if="${urlLocaleMapping == 'gb'}">
+<div th:if="${locale == 'gb'}">
     Some stuff for UK 
 </div>
 ```

@@ -1,11 +1,10 @@
 allprojects {
     group = 'com.github.transferwise'
-    version = '2.1.4'
+    version = '3.0.0'
 }
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'groovy'
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
     apply plugin: 'idea'
@@ -57,5 +56,5 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
+    gradleVersion = '4.7'
 }

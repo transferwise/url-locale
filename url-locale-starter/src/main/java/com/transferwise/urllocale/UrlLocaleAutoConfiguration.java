@@ -1,14 +1,12 @@
 package com.transferwise.urllocale;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
 
-import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -17,13 +15,28 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableConfigurationProperties(UrlLocaleAutoConfiguration.UrlLocaleProperties.class)
 public class UrlLocaleAutoConfiguration {
-    @Data
     @ConfigurationProperties(prefix = "url-locale")
     static class UrlLocaleProperties {
         private Map<String, String> mapping = new HashMap<String, String>() {{
             put("gb", "en-GB");
         }};
         private String fallback = "en-gb";
+
+        public Map<String, String> getMapping() {
+            return mapping;
+        }
+
+        public void setMapping(Map<String, String> mapping) {
+            this.mapping = mapping;
+        }
+
+        public String getFallback() {
+            return fallback;
+        }
+
+        public void setFallback(String fallback) {
+            this.fallback = fallback;
+        }
     }
 
     @Bean
@@ -38,37 +51,11 @@ public class UrlLocaleAutoConfiguration {
         if (!localeMapping.values().contains(fallback)) {
             throw new RuntimeException("No mapping defined for fallback \"" + config.getFallback() + "\"");
         }
-        return new UrlLocaleResolver(fallback);
+        return new UrlLocaleResolver(localeMapping, fallback);
     }
 
     @Bean
-    public FilterRegistrationBean urlLocaleExtractorFilter(Map<String, Locale> localeMapping) {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new UrlLocaleExtractorFilter(localeMapping));
-        registration.setOrder(10);
-        registration.setDispatcherTypes(
-                DispatcherType.FORWARD,
-                DispatcherType.INCLUDE,
-                DispatcherType.REQUEST,
-                DispatcherType.ASYNC,
-                DispatcherType.ERROR
-        );
-        return registration;
+    public Filter urlLocaleExtractorFilter(Map<String, Locale> localeMapping) {
+        return new UrlLocaleExtractorFilter(localeMapping.keySet());
     }
-
-    @Bean
-    public FilterRegistrationBean urlLocaleEncodingFilter() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new UrlLocaleEncodingFilter());
-        registration.setOrder(20);
-        registration.setDispatcherTypes(
-                DispatcherType.FORWARD,
-                DispatcherType.INCLUDE,
-                DispatcherType.REQUEST,
-                DispatcherType.ASYNC,
-                DispatcherType.ERROR
-        );
-        return registration;
-    }
-
 }
