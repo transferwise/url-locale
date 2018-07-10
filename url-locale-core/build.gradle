@@ -1,6 +1,21 @@
+ext {
+    junitVersion = '5.2.0'
+}
+
 dependencies {
     compile 'javax.servlet:javax.servlet-api:3.1.0'
     compile 'org.springframework:spring-webmvc:4.3.10.RELEASE'
 
-    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testCompile "org.junit.jupiter:junit-jupiter-params:$junitVersion"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+
+    testCompile "org.mockito:mockito-core:2.+"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+    }
 }

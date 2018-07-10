@@ -3,24 +3,22 @@ package com.transferwise.urllocale;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UrlLocaleExtractorFilter implements Filter {
-    static final String URL_LOCALE_ATTRIBUTE = "urlLocale";
-    static final String URL_LOCALE_MAPPING_ATTRIBUTE = "urlLocaleMapping";
-    private static final Pattern URL_PATTERN = Pattern.compile("^/([a-z]{2})(/.*)$");
+    static final String LOCALE_ATTRIBUTE = "locale";
+    private static final Pattern URL_PATTERN = Pattern.compile("^/([a-z]{2})/.*$");
 
-    private final Map<String, Locale> localeMapping;
+    private Set<String> allowedLocaleMappings;
 
-    public UrlLocaleExtractorFilter(Map<String, Locale> localeMapping) {
-        this.localeMapping = localeMapping;
+    public UrlLocaleExtractorFilter(Set<String> allowedLocaleMappings) {
+        this.allowedLocaleMappings = allowedLocaleMappings;
     }
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override
@@ -34,17 +32,12 @@ public class UrlLocaleExtractorFilter implements Filter {
         Matcher matcher = URL_PATTERN.matcher(req.getServletPath());
         if (matcher.matches()) {
             String mapping = matcher.group(1);
-            if (request.getAttribute(URL_LOCALE_ATTRIBUTE) != null || !localeMapping.containsKey(mapping)) {
-                chain.doFilter(request, response);
-                return;
+            if (allowedLocaleMappings.contains(mapping)) {
+                request.setAttribute(LOCALE_ATTRIBUTE, mapping);
             }
-            request.setAttribute(URL_LOCALE_MAPPING_ATTRIBUTE, mapping);
-            request.setAttribute(URL_LOCALE_ATTRIBUTE, localeMapping.get(mapping));
-            RequestDispatcher dispatcher = request.getRequestDispatcher(matcher.group(2));
-            dispatcher.forward(request, response);
-        } else {
-            chain.doFilter(request, response);
         }
+
+        chain.doFilter(request, response);
     }
 
     @Override
