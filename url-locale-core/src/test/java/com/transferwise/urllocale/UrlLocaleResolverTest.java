@@ -36,7 +36,7 @@ class UrlLocaleResolverTest {
     @CsvSource({
         "de, de-DE",
         "it, it-IT",
-        "xx, en-GB",
+        ", en-GB",
     })
     void itShouldResolveLocale(String locale, String expectedLocale) {
         Locale resolvedLocale = urlLocaleResolver.resolveLocale(requestWithLocaleAttribute(locale));
@@ -52,6 +52,9 @@ class UrlLocaleResolverTest {
 
     @Test
     void itShouldNotSupportLocaleChange() {
-        assertThrows(UnsupportedOperationException.class, () -> urlLocaleResolver.setLocale(mock(HttpServletRequest.class), mock(HttpServletResponse.class), Locale.UK));
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> urlLocaleResolver.setLocale(mock(HttpServletRequest.class), mock(HttpServletResponse.class), Locale.UK)
+        );
     }
 }

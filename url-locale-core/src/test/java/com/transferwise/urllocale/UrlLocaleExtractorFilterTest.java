@@ -6,18 +6,23 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import static com.transferwise.urllocale.UrlLocaleExtractorFilter.LOCALE_ATTRIBUTE;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class UrlLocaleExtractorFilterTest {
     private HttpServletRequest request;
+    private HttpServletResponse response;
     private FilterChain chain;
     private UrlLocaleExtractorFilter filter;
     private Set<String> allowedLocaleMappings = new HashSet<>();
@@ -25,6 +30,7 @@ class UrlLocaleExtractorFilterTest {
     @BeforeEach
     void setUp() {
         request = mock(HttpServletRequest.class);
+        response = mock(HttpServletResponse.class);
         chain = mock(FilterChain.class);
         filter = new UrlLocaleExtractorFilter(allowedLocaleMappings);
     }
@@ -48,9 +54,7 @@ class UrlLocaleExtractorFilterTest {
     @ParameterizedTest(name = "Path \"{0}\" should not set locale attribute")
     @CsvSource({
         "/gb",
-        "/esp",
-        "/es/",
-        "/es/path",
+        "/esp"
     })
     void itShouldNotSetLocaleAttribute(String path) {
         whenLocaleMappingConfigured("gb");
@@ -59,6 +63,29 @@ class UrlLocaleExtractorFilterTest {
         doFilter();
 
         assertLocaleAttributeIsNotSet();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "/es/",
+        "/es/path",
+        "/xx/",
+        "/gb/",
+    })
+    void itShouldFailToMapUnrecognisedLocale(String path) {
+        whenPathIs(path);
+
+        doFilter();
+
+        assertNotFoundErrorIsSent();
+    }
+
+    private void assertNotFoundErrorIsSent() {
+        try {
+            verify(response, times(1)).sendError(HttpServletResponse.SC_NOT_FOUND);
+        } catch (IOException e) {
+            fail();
+        }
     }
 
     private void whenLocaleMappingConfigured(String mapping) {
@@ -71,7 +98,7 @@ class UrlLocaleExtractorFilterTest {
 
     private void doFilter() {
         try {
-            filter.doFilter(request, mock(ServletResponse.class), chain);
+            filter.doFilter(request, response, chain);
         } catch (IOException | ServletException e) {
             fail();
         }

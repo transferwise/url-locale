@@ -10,7 +10,7 @@ dependencies {
     testCompile "org.junit.jupiter:junit-jupiter-params:$junitVersion"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
 
-    testCompile "org.mockito:mockito-core:2.+"
+    testCompile 'org.mockito:mockito-core:2.+'
 }
 
 test {
