@@ -1,11 +1,19 @@
 package com.transferwise.urllocale;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static javax.servlet.http.HttpServletResponse.*;
 
 public class UrlLocaleExtractorFilter implements Filter {
     static final String LOCALE_ATTRIBUTE = "locale";
@@ -32,9 +40,12 @@ public class UrlLocaleExtractorFilter implements Filter {
         Matcher matcher = URL_PATTERN.matcher(req.getServletPath());
         if (matcher.matches()) {
             String mapping = matcher.group(1);
-            if (allowedLocaleMappings.contains(mapping)) {
-                request.setAttribute(LOCALE_ATTRIBUTE, mapping);
+            if (!allowedLocaleMappings.contains(mapping)) {
+                ((HttpServletResponse) response).sendError(SC_NOT_FOUND);
+                return;
             }
+
+            request.setAttribute(LOCALE_ATTRIBUTE, mapping);
         }
 
         chain.doFilter(request, response);
