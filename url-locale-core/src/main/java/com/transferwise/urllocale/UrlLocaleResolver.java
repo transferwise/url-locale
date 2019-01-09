@@ -7,22 +7,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.transferwise.urllocale.UrlLocaleExtractorFilter.LOCALE_ATTRIBUTE;
+import static com.transferwise.urllocale.UrlLocaleExtractorFilter.URL_LOCALE_ATTRIBUTE;
 
 public class UrlLocaleResolver implements LocaleResolver {
-    private final Map<String, Locale> localeMapping;
+    private final Map<String, Locale> urlLocaleToLocaleMapping;
     private final Locale fallback;
 
-    public UrlLocaleResolver(Map<String, Locale> localeMapping, Locale fallback) {
-        this.localeMapping = localeMapping;
+    public UrlLocaleResolver(Map<String, Locale> urlLocaleToLocaleMapping, Locale fallback) {
+        this.urlLocaleToLocaleMapping = urlLocaleToLocaleMapping;
         this.fallback = fallback;
     }
 
     @Override
     public Locale resolveLocale(HttpServletRequest request) {
-        String locale = (String) request.getAttribute(LOCALE_ATTRIBUTE);
+        String locale = (String) request.getAttribute(URL_LOCALE_ATTRIBUTE);
 
-        return localeMapping.getOrDefault(locale, fallback);
+        return urlLocaleToLocaleMapping.getOrDefault(locale, fallback);
     }
 
     @Override

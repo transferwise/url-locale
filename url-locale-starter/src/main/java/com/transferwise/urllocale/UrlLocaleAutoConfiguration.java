@@ -40,18 +40,18 @@ public class UrlLocaleAutoConfiguration {
     }
 
     @Bean
-    public Map<String, Locale> localeMapping(UrlLocaleProperties config) {
+    public Map<String, Locale> urlLocaleToLocaleMapping(UrlLocaleProperties config) {
         return config.getMapping().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> Locale.forLanguageTag(e.getValue())));
     }
 
     @Bean
-    public LocaleResolver localeResolver(UrlLocaleProperties config, Map<String, Locale> localeMapping) {
+    public LocaleResolver localeResolver(UrlLocaleProperties config, Map<String, Locale> urlLocaleToLocaleMapping) {
         Locale fallback = Locale.forLanguageTag(config.getFallback());
-        if (!localeMapping.values().contains(fallback)) {
+        if (!urlLocaleToLocaleMapping.values().contains(fallback)) {
             throw new RuntimeException("No mapping defined for fallback \"" + config.getFallback() + "\"");
         }
-        return new UrlLocaleResolver(localeMapping, fallback);
+        return new UrlLocaleResolver(urlLocaleToLocaleMapping, fallback);
     }
 
     @Bean

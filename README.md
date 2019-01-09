@@ -1,6 +1,9 @@
 # URL Locale [![CircleCI](https://circleci.com/gh/transferwise/url-locale/tree/master.svg?style=shield)](https://circleci.com/gh/transferwise/url-locale/tree/master) [![GitHub release](https://jitpack.io/v/transferwise/url-locale.svg)](https://github.com/transferwise/url-locale/releases/latest)
 
-URL locale servlet filters and auto-configuration to setup your application locale through the URL.
+Spring components with optional auto-configuration that enables resolving a **locale** (e.g. _en-GB_) for a request based on a two character **URL locale** (e.g. _gb_) at the start of the HTTP request path.
+
+For example, given mapping configuration from url locale _gb_ to locale _en-GB_, a request to `https://youdomain.com/gb/some-path` would resolve the locale as _en-GB_.
+Paths matching the URL locale pattern but without locale mappings will result in a 404.
 
 ## Installation
 
@@ -30,27 +33,27 @@ The package includes all the necessary auto-wiring for Spring Boot, so there is 
 
 ### Available locales
 
-You can inject the locale mapping in any service or controller you might need it.
+You can inject the url locale to locale mapping in any service or controller you might need it.
 
 ```java
 @Autowired
-private Map<String, Locale> localeMapping;
+private Map<String, Locale> urlLocaleToLocaleMapping;
 ```
 
-### Available request parameters
+### Available request attributes
 
-You also have the locale and the locale mapping available in requests.
+The url locale is also available as a request parameter, named `urlLocale`.
 
 #### Spring controllers
 
 
 ```java
 @Controller
-@RequestMapping("/{locale:[a-z]{2}}")
+@RequestMapping("/{urlLocale:[a-z]{2}}")
 class MyController {
     @GetMapping("/do-something")
-    public String doSomething(@RequestAttribute("urlLocaleMapping") String urlLocaleMapping) {
-        if (urlLocaleMapping.equals("gb")) {
+    public String doSomething(@RequestAttribute("urlLocale") String urlLocale) {
+        if (urlLocale.equals("gb")) {
             return doSomethingForUK();
         }
         
@@ -62,7 +65,7 @@ class MyController {
 #### Thymeleaf templates
 
 ```html
-<div th:if="${locale == 'gb'}">
+<div th:if="${urlLocale == 'gb'}">
     Some stuff for UK 
 </div>
 ```
@@ -83,5 +86,5 @@ url-locale:
     us: en-US
 ```
 
-* The `fallback` is the default locale it would be inferred when there is no mapping present in the URL.
-* The `mapping` is a key-value configuration for the locale mappings you'll want to offer in your app. 
+* The `fallback` is the default locale that will be inferred when there is no url locale found in the URL.
+* The `mapping` is the url locale to locale mappings you want to offer in your app. 

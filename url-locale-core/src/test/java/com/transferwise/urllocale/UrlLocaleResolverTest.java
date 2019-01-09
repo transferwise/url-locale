@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.transferwise.urllocale.UrlLocaleExtractorFilter.LOCALE_ATTRIBUTE;
+import static com.transferwise.urllocale.UrlLocaleExtractorFilter.URL_LOCALE_ATTRIBUTE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 class UrlLocaleResolverTest {
 
     private static final Locale FALLBACK = Locale.UK;
-    private static final Map<String, Locale> LOCALE_MAPPING = new HashMap<String, Locale>() {{
+    private static final Map<String, Locale> URL_LOCALE_TO_LOCALE_MAPPING = new HashMap<String, Locale>() {{
         put("de", Locale.GERMANY);
         put("it", Locale.ITALY);
     }};
@@ -29,7 +29,7 @@ class UrlLocaleResolverTest {
 
     @BeforeEach
     void setUp() {
-        urlLocaleResolver = new UrlLocaleResolver(LOCALE_MAPPING, FALLBACK);
+        urlLocaleResolver = new UrlLocaleResolver(URL_LOCALE_TO_LOCALE_MAPPING, FALLBACK);
     }
 
     @ParameterizedTest(name = "Mapping \"{0}\" should match locale \"{1}\"")
@@ -38,15 +38,15 @@ class UrlLocaleResolverTest {
         "it, it-IT",
         ", en-GB",
     })
-    void itShouldResolveLocale(String locale, String expectedLocale) {
-        Locale resolvedLocale = urlLocaleResolver.resolveLocale(requestWithLocaleAttribute(locale));
+    void itShouldResolveLocale(String urlLocale, String expectedLocale) {
+        Locale resolvedLocale = urlLocaleResolver.resolveLocale(requestWithUrlLocaleAttribute(urlLocale));
 
         assertEquals(Locale.forLanguageTag(expectedLocale), resolvedLocale);
     }
 
-    private HttpServletRequest requestWithLocaleAttribute(String locale) {
+    private HttpServletRequest requestWithUrlLocaleAttribute(String locale) {
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getAttribute(LOCALE_ATTRIBUTE)).thenReturn(locale);
+        when(request.getAttribute(URL_LOCALE_ATTRIBUTE)).thenReturn(locale);
         return request;
     }
 
