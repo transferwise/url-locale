@@ -68,10 +68,10 @@ class UrlLocaleExtractorFilterTest {
 
     @ParameterizedTest
     @CsvSource({
-        "/es/",
-        "/es/path",
-        "/xx/",
-        "/gb/",
+            "/es/",
+            "/es/path",
+            "/xx/",
+            "/gb/",
     })
     void itShouldFailToMapUnrecognisedUrlLocale(String path) {
         whenPathIs(path);
@@ -79,6 +79,24 @@ class UrlLocaleExtractorFilterTest {
         doFilter();
 
         assertNotFoundErrorIsSent();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "/es/,,/gb/",
+        "/es/,queryParam=1,/gb/?queryParam=1",
+        "/es/path,,/gb/path",
+        "/es/path,queryParam=1,/gb/path?queryParam=1",
+        "/xx/,,/gb/",
+        "/xx/,queryParam=1,/gb/?queryParam=1",
+    })
+    void itShouldRedirectUnrecognisedUrlLocale(String path, String queryParamsString, String expectedRedirectPath) {
+        filter = new UrlLocaleExtractorFilter(supportedUrlLocales, "gb");
+        whenPathWithQueryParamsIs(path, queryParamsString);
+
+        doFilter();
+
+        assertRedirected(expectedRedirectPath);
     }
 
     private void assertNotFoundErrorIsSent() {
@@ -89,12 +107,22 @@ class UrlLocaleExtractorFilterTest {
         }
     }
 
+    private void assertRedirected(String expectedRedirectPath) {
+        verify(response, times(1)).setStatus(301);
+        verify(response, times(1)).setHeader("Location", expectedRedirectPath);
+    }
+
     private void whenUrlLocaleMappingConfigured(String mapping) {
         supportedUrlLocales.add(mapping);
     }
 
     private void whenPathIs(String path) {
-        when(request.getServletPath()).thenReturn(path);
+        whenPathWithQueryParamsIs(path, null);
+    }
+
+    private void whenPathWithQueryParamsIs(String pathWithoutQueryParameters, String queryParametersString) {
+        when(request.getServletPath()).thenReturn(pathWithoutQueryParameters);
+        when(request.getQueryString()).thenReturn(queryParametersString);
     }
 
     private void doFilter() {

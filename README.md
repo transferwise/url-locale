@@ -3,7 +3,7 @@
 Spring components with optional auto-configuration that enables resolving a **locale** (e.g. _en-GB_) for a request based on a two character **URL locale** (e.g. _gb_) at the start of the HTTP request path.
 
 For example, given mapping configuration from url locale _gb_ to locale _en-GB_, a request to `https://youdomain.com/gb/some-path` would resolve the locale as _en-GB_.
-Paths matching the URL locale pattern but without locale mappings will result in a 404.
+Paths matching the URL locale pattern but without a locale mapping configured will result in either a redirect to the fallback url locale if one has been configured, otherwise a 404.
 
 ## Installation
 
@@ -76,7 +76,9 @@ You'll need to configure the url-locale mapping. In your `application.yml`
 
 ```yaml
 url-locale:
-  fallback: en-gb
+  fallback: 
+    value: gb
+    redirectStatusCode: 301
   mapping:
     br: pt-BR
     de: de-DE
@@ -86,5 +88,5 @@ url-locale:
     us: en-US
 ```
 
-* The `fallback` is the default locale it would be inferred when there is no mapping present in the URL.
-* The `mapping` is the url locale to locale mappings you want to offer in your app. 
+* `fallback` affects the behaviour given a request to a URL locale that does not have a mapping. Specifying this configuration results in a redirect to the given url locale. A fallback locale is also inferred from this, which is resolved when no url locale is identified in the request url.
+* `mapping` is the url locale to locale mappings you want to offer in your app. 

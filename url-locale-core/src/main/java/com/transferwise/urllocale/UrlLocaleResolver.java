@@ -13,6 +13,10 @@ public class UrlLocaleResolver implements LocaleResolver {
     private final Map<String, Locale> urlLocaleToLocaleMapping;
     private final Locale fallback;
 
+    public UrlLocaleResolver(Map<String, Locale> urlLocaleToLocaleMapping) {
+        this(urlLocaleToLocaleMapping, null);
+    }
+
     public UrlLocaleResolver(Map<String, Locale> urlLocaleToLocaleMapping, Locale fallback) {
         this.urlLocaleToLocaleMapping = urlLocaleToLocaleMapping;
         this.fallback = fallback;

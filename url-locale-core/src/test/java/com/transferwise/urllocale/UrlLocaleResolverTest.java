@@ -44,6 +44,17 @@ class UrlLocaleResolverTest {
         assertEquals(Locale.forLanguageTag(expectedLocale), resolvedLocale);
     }
 
+    @ParameterizedTest(name = "Mapping \"{0}\" should match locale \"{1}\"")
+    @CsvSource({
+            ", en-GB",
+    })
+    void noLocaleIsResolvedIfNoFallbackAvailable(String urlLocale) {
+        urlLocaleResolver = new UrlLocaleResolver(URL_LOCALE_TO_LOCALE_MAPPING, null);
+        Locale resolvedLocale = urlLocaleResolver.resolveLocale(requestWithUrlLocaleAttribute(urlLocale));
+
+        assertEquals(null, resolvedLocale);
+    }
+
     private HttpServletRequest requestWithUrlLocaleAttribute(String locale) {
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getAttribute(URL_LOCALE_ATTRIBUTE)).thenReturn(locale);

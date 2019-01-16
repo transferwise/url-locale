@@ -20,7 +20,7 @@ public class UrlLocaleAutoConfiguration {
         private Map<String, String> mapping = new HashMap<String, String>() {{
             put("gb", "en-GB");
         }};
-        private String fallback = "en-gb";
+        private FallbackConfig fallback;
 
         public Map<String, String> getMapping() {
             return mapping;
@@ -30,13 +30,35 @@ public class UrlLocaleAutoConfiguration {
             this.mapping = mapping;
         }
 
-        public String getFallback() {
+        public FallbackConfig getFallback() {
             return fallback;
         }
 
-        public void setFallback(String fallback) {
+        public void setFallback(FallbackConfig fallback) {
             this.fallback = fallback;
         }
+
+        private class FallbackConfig {
+            private String value;
+            private int redirectStatusCode = UrlLocaleExtractorFilter.DEFAULT_FALLBACK_STATUS_CODE;
+
+            public String getValue() {
+                return value;
+            }
+
+            public void setValue(String value) {
+                this.value = value;
+            }
+
+            public int getRedirectStatusCode() {
+                return redirectStatusCode;
+            }
+
+            public void setRedirectStatusCode(int redirectStatusCode) {
+                this.redirectStatusCode = redirectStatusCode;
+            }
+        }
+
     }
 
     @Bean
@@ -47,15 +69,22 @@ public class UrlLocaleAutoConfiguration {
 
     @Bean
     public LocaleResolver localeResolver(UrlLocaleProperties config, Map<String, Locale> urlLocaleToLocaleMapping) {
-        Locale fallback = Locale.forLanguageTag(config.getFallback());
-        if (!urlLocaleToLocaleMapping.values().contains(fallback)) {
-            throw new RuntimeException("No mapping defined for fallback \"" + config.getFallback() + "\"");
-        }
-        return new UrlLocaleResolver(urlLocaleToLocaleMapping, fallback);
+        Locale fallbackLocale = null;
+        if (config.getFallback() != null) {
+            if (!urlLocaleToLocaleMapping.containsKey(config.getFallback().getValue())) {
+                throw new RuntimeException("No mapping defined for fallback url locale \"" + config.getFallback() + "\"");
+            }
+                fallbackLocale = urlLocaleToLocaleMapping.get(config.getFallback().getValue());
+            }
+        return new UrlLocaleResolver(urlLocaleToLocaleMapping, fallbackLocale);
     }
 
     @Bean
-    public Filter urlLocaleExtractorFilter(Map<String, Locale> localeMapping) {
-        return new UrlLocaleExtractorFilter(localeMapping.keySet());
+    public Filter urlLocaleExtractorFilter(UrlLocaleProperties config, Map<String, Locale> localeMapping) {
+        if (config.getFallback() != null) {
+            return new UrlLocaleExtractorFilter(localeMapping.keySet(), config.getFallback().getValue(), config.getFallback().getRedirectStatusCode());
+        } else {
+            return new UrlLocaleExtractorFilter(localeMapping.keySet());
+        }
     }
 }
