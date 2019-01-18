@@ -16,13 +16,16 @@ import java.util.regex.Pattern;
 import static javax.servlet.http.HttpServletResponse.*;
 
 public class UrlLocaleExtractorFilter implements Filter {
-    static final String LOCALE_ATTRIBUTE = "locale";
-    private static final Pattern URL_PATTERN = Pattern.compile("^/([a-z]{2})/.*$");
 
-    private Set<String> allowedLocaleMappings;
+    @Deprecated // Prefer URL_LOCALE_ATTRIBUTE. Not removing as likely to be used in templates that may not be caught in dev.
+    static final String LEGACY_LOCALE_ATTRIBUTE = "locale";
+    public static final String URL_LOCALE_ATTRIBUTE = "urlLocale";
+    private static final Pattern PATH_PATTERN = Pattern.compile("^/([a-z]{2})/.*$");
 
-    public UrlLocaleExtractorFilter(Set<String> allowedLocaleMappings) {
-        this.allowedLocaleMappings = allowedLocaleMappings;
+    private Set<String> supportedUrlLocales;
+
+    public UrlLocaleExtractorFilter(Set<String> supportedUrlLocales) {
+        this.supportedUrlLocales = supportedUrlLocales;
     }
 
     @Override
@@ -37,15 +40,16 @@ public class UrlLocaleExtractorFilter implements Filter {
     ) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
 
-        Matcher matcher = URL_PATTERN.matcher(req.getServletPath());
+        Matcher matcher = PATH_PATTERN.matcher(req.getServletPath());
         if (matcher.matches()) {
-            String mapping = matcher.group(1);
-            if (!allowedLocaleMappings.contains(mapping)) {
+            String urlLocale = matcher.group(1);
+            if (!supportedUrlLocales.contains(urlLocale)) {
                 ((HttpServletResponse) response).sendError(SC_NOT_FOUND);
                 return;
             }
 
-            request.setAttribute(LOCALE_ATTRIBUTE, mapping);
+            request.setAttribute(URL_LOCALE_ATTRIBUTE, urlLocale);
+            request.setAttribute(LEGACY_LOCALE_ATTRIBUTE, urlLocale);
         }
 
         chain.doFilter(request, response);
