@@ -20,7 +20,7 @@ public class UrlLocaleExtractorFilter implements Filter {
     @Deprecated // Prefer URL_LOCALE_ATTRIBUTE. Not removing as likely to be used in templates that may not be caught in dev.
     static final String LEGACY_LOCALE_ATTRIBUTE = "locale";
     public static final String URL_LOCALE_ATTRIBUTE = "urlLocale";
-    private static final Pattern PATH_PATTERN = Pattern.compile("^/([a-z]{2})/.*$");
+    private static final Pattern PATH_PATTERN = Pattern.compile("^/([a-z]{2}(-[a-z]{2})?)/.*$");
 
     private Set<String> supportedUrlLocales;
 

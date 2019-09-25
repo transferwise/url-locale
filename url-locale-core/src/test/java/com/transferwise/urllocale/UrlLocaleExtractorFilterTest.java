@@ -40,11 +40,14 @@ class UrlLocaleExtractorFilterTest {
     @CsvSource({
         "/gb/path, gb",
         "/gb/, gb",
+        "/zh-hk/, zh-hk",
         "/es/some/path, es",
     })
     void itShouldSetRequestUrlLocaleAttribute(String path, String expectedUrlLocale) {
         whenUrlLocaleMappingConfigured("gb");
         whenUrlLocaleMappingConfigured("es");
+        whenUrlLocaleMappingConfigured("zh-hk");
+
         whenPathIs(path);
 
         doFilter();
@@ -55,10 +58,14 @@ class UrlLocaleExtractorFilterTest {
     @ParameterizedTest(name = "Path \"{0}\" should not set urlLocale attribute")
     @CsvSource({
         "/gb",
-        "/esp"
+        "/esp",
+        "/z/",
+        "/zhhk/",
+        "/zhhhk/",
     })
     void itShouldNotSetUrlLocaleAttribute(String path) {
         whenUrlLocaleMappingConfigured("gb");
+        whenUrlLocaleMappingConfigured("zh-hk");
         whenPathIs(path);
 
         doFilter();

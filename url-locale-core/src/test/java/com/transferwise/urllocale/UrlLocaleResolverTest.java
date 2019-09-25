@@ -20,10 +20,16 @@ import static org.mockito.Mockito.when;
 class UrlLocaleResolverTest {
 
     private static final Locale FALLBACK = Locale.UK;
-    private static final Map<String, Locale> URL_LOCALE_TO_LOCALE_MAPPING = new HashMap<String, Locale>() {{
-        put("de", Locale.GERMANY);
-        put("it", Locale.ITALY);
-    }};
+    private static final Map<String, Locale> URL_LOCALE_TO_LOCALE_MAPPING;
+
+    static {
+        Map<String, Locale> mappings = new HashMap<>();
+        mappings.put("de", Locale.GERMANY);
+        mappings.put("it", Locale.ITALY);
+        mappings.put("zh-hk", new Locale("zh", "HK"));
+
+        URL_LOCALE_TO_LOCALE_MAPPING = mappings;
+    };
 
     private UrlLocaleResolver urlLocaleResolver;
 
@@ -34,6 +40,7 @@ class UrlLocaleResolverTest {
 
     @ParameterizedTest(name = "Mapping \"{0}\" should match locale \"{1}\"")
     @CsvSource({
+        "zh-hk, zh-HK",
         "de, de-DE",
         "it, it-IT",
         ", en-GB",
