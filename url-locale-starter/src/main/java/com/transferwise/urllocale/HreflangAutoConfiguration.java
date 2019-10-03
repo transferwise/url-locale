@@ -16,15 +16,15 @@ import java.util.stream.Collectors;
 public class HreflangAutoConfiguration {
     @ConfigurationProperties(prefix = "hreflang")
     static class HreflangProperties {
-        private Map<String, String> mapping = new HashMap<>();
+        private Map<String, String> hreflangToUrlLocale = new HashMap<>();
         private String xDefault = "gb";
 
-        public Map<String, String> getMapping() {
-            return mapping;
+        public Map<String, String> getHreflangToUrlLocale() {
+            return hreflangToUrlLocale;
         }
 
-        public void setMapping(Map<String, String> mapping) {
-            this.mapping = mapping;
+        public void setHreflangToUrlLocale(Map<String, String> hreflangToUrlLocale) {
+            this.hreflangToUrlLocale = hreflangToUrlLocale;
         }
 
         public String getxDefault() {
@@ -39,7 +39,7 @@ public class HreflangAutoConfiguration {
 
     @Bean
     public HreflangConfig hreflangToUrlLocaleMapping(HreflangProperties properties) {
-        Map<Hreflang, String> map = properties.getMapping().entrySet().stream()
+        Map<Hreflang, String> map = properties.getHreflangToUrlLocale().entrySet().stream()
                 .collect(Collectors.toMap(e -> Hreflang.fromString(e.getKey()), Map.Entry::getValue));
         return new HreflangConfig(map, properties.getxDefault());
    }

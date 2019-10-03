@@ -27,7 +27,7 @@ If you want to use the servlet filters by your own avoiding auto-configuration, 
 compile 'com.github.transferwise.url-locale:url-locale-core:3.1.0'
 ```
 
-## Usage
+## Url-locale usage
 
 The package includes all the necessary auto-wiring for Spring Boot, so there is no need to do any extra work apart from the configuration.
 
@@ -88,3 +88,19 @@ url-locale:
 
 * The `fallback` is the default locale that will be inferred when there is no url locale found in the URL.
 * The `mapping` is the url locale to locale mappings you want to offer in your app. 
+
+## Hreflang and localised link usage
+
+### Example configuration
+
+In a project's application.yml file:
+
+```yaml
+hreflang:
+  x-default: gb
+  hreflangToUrlLocale:
+    fr: fr
+    de-CH: ch
+    de-DE: de
+    zh-Hant: zh-hk
+```

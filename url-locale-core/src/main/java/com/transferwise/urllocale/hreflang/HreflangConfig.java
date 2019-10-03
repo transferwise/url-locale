@@ -3,16 +3,16 @@ package com.transferwise.urllocale.hreflang;
 import java.util.Map;
 
 public class HreflangConfig {
-    private Map<Hreflang, String> mapping;
+    private Map<Hreflang, String> hreflangToUrlLocaleMapping;
     private String xDefault;
 
-    public HreflangConfig(Map<Hreflang, String> hreflangMap, String xDefault) {
-        this.mapping = hreflangMap;
+    public HreflangConfig(Map<Hreflang, String> hreflangToUrlLocaleMap, String xDefault) {
+        this.hreflangToUrlLocaleMapping = hreflangToUrlLocaleMap;
         this.xDefault = xDefault;
     }
 
-    public Map<Hreflang, String> getMapping() {
-        return mapping;
+    public Map<Hreflang, String> getHreflangToUrlLocaleMapping() {
+        return hreflangToUrlLocaleMapping;
     }
 
     public String getxDefault() {

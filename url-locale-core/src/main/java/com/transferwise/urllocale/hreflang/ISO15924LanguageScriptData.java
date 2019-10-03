@@ -1,9 +1,6 @@
 package com.transferwise.urllocale.hreflang;
 
-import java.util.Arrays;
-import java.util.List;
-
-class LanguageScriptISOData {
+class ISO15924LanguageScriptData {
     private static final String[] validScripts = new String[] {
                 "Adlm",
                 "Afak",

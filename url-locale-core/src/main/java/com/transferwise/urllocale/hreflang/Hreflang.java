@@ -15,7 +15,7 @@ public class Hreflang {
             Pattern.CASE_INSENSITIVE);
 
     private static final Set<String> VALID_LANGUAGES = new HashSet<>(Arrays.asList(Locale.getISOLanguages()));
-    private static final Set<String> VALID_SCRIPTS = new HashSet<>(Arrays.asList(LanguageScriptISOData.getISOScripts()));
+    private static final Set<String> VALID_SCRIPTS = new HashSet<>(Arrays.asList(ISO15924LanguageScriptData.getISOScripts()));
     private static final Set<String> VALID_REGIONS = new HashSet<>(Arrays.asList(Locale.getISOCountries()));
 
     public String getValue() {

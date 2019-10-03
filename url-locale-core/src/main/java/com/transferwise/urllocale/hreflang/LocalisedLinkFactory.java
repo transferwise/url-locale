@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LocalisedLinkFactory {
-    private final String domain = "https://transferwise.com";
+    private final String domain;
     private final HreflangConfig hreflangConfig;
 
-    public LocalisedLinkFactory(HreflangConfig hreflangConfig) {
+    public LocalisedLinkFactory(String domain, HreflangConfig hreflangConfig) {
+        this.domain = domain;
         this.hreflangConfig = hreflangConfig;
     }
 
     public List<LocalisedLink> linksForResource(String resource) {
 
-        List<LocalisedLink> list = hreflangConfig.getMapping().entrySet().stream()
+        List<LocalisedLink> list = hreflangConfig.getHreflangToUrlLocaleMapping().entrySet().stream()
                 .map(e -> new LocalisedLink(e.getKey(), domain, e.getValue(), resource))
                 .sorted()
                 .collect(Collectors.toList());

@@ -26,8 +26,8 @@ public class LocalisedLink implements Comparable<LocalisedLink> {
                 resource = "/" + resource;
             }
             String[] split = domain.split("://");
-            String hostname = split[1];
             String protocol = split[0];
+            String hostname = split[1];
             String path = "/" + urlLocale + resource;
             URI uri = new URI(protocol, null, hostname, -1, path, null, null);
             return uri.toString();
@@ -37,7 +37,6 @@ public class LocalisedLink implements Comparable<LocalisedLink> {
         } catch (IndexOutOfBoundsException exc) {
             throw new IllegalArgumentException(String.format("Invalid domain: %s", domain));
         }
-
     }
 
     public String toString() {
