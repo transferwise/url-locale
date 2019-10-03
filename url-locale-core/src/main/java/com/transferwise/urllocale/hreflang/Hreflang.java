@@ -19,7 +19,12 @@ public class Hreflang {
     private static final Set<String> VALID_REGIONS = new HashSet<>(Arrays.asList(Locale.getISOCountries()));
 
     public String getValue() {
-        return this.value;
+        if (language == null) {
+            return "x-default";
+        }
+        return language
+                + (script == null ? "" : "-" + script)
+                + (region == null ? "" : "-" + region);
     }
 
     public static class Builder {
@@ -63,28 +68,12 @@ public class Hreflang {
         this.language = language;
         this.script = script;
         this.region = region;
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(language);
-
-        if (script != null) {
-            stringBuilder.append("-");
-            stringBuilder.append(script);
-        }
-
-        if (region != null) {
-            stringBuilder.append("-");
-            stringBuilder.append(region);
-        }
-
-        this.value = stringBuilder.toString();
     }
 
     private Hreflang() {
         this.language = null;
         this.script = null;
         this.region = null;
-        this.value = "x-default";
     }
 
     public static Hreflang fromString(String string) {
@@ -120,11 +109,11 @@ public class Hreflang {
     @Override
     public boolean equals(Object o) {
         return o instanceof Hreflang &&
-                ((Hreflang) o).value.equals(value);
+                ((Hreflang) o).getValue().equals(this.getValue());
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return this.getValue().hashCode();
     }
 }
