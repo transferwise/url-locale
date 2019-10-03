@@ -8,7 +8,6 @@ public class Hreflang {
     private String language;
     private String script;
     private String region;
-    private String value;
 
     private static final Pattern PATTERN = Pattern.compile(
             "^((?<language>[a-z]{2})(-(?<script>[a-z]{4}))?(-(?<region>[a-z]{2}))?)$",
