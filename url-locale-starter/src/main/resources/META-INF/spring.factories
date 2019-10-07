@@ -1,2 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.transferwise.urllocale.UrlLocaleAutoConfiguration
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.transferwise.urllocale.HreflangAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.transferwise.urllocale.UrlLocaleAutoConfiguration,\
+com.transferwise.urllocale.HreflangAutoConfiguration
