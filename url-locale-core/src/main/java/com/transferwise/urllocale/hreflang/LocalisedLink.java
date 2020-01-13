@@ -15,12 +15,12 @@ public class LocalisedLink implements Comparable<LocalisedLink> {
         return href;
     }
 
-    LocalisedLink(Hreflang hreflang, String domain, String urlLocale, String resource) {
+    LocalisedLink(Hreflang hreflang, String domain, String urlLocale, String resource, String queryString) {
         this.hreflang = hreflang.getValue();
-        this.href = parseHref(domain, urlLocale, resource);
+        this.href = parseHref(domain, urlLocale, resource, queryString);
     }
 
-    private String parseHref(String domain, String urlLocale, String resource) {
+    private String parseHref(String domain, String urlLocale, String resource, String queryString) {
         try {
             if (!resource.startsWith("/")) {
                 resource = "/" + resource;
@@ -29,7 +29,7 @@ public class LocalisedLink implements Comparable<LocalisedLink> {
             String protocol = split[0];
             String hostname = split[1];
             String path = "/" + urlLocale + resource;
-            URI uri = new URI(protocol, null, hostname, -1, path, null, null);
+            URI uri = new URI(protocol, null, hostname, -1, path, queryString, null);
             return uri.toString();
 
         } catch (URISyntaxException exc) {

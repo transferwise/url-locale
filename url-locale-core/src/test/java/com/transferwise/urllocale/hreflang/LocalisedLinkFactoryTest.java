@@ -29,7 +29,7 @@ class LocalisedLinkFactoryTest {
         when(HREFLANG_CONFIG.getHreflangToUrlLocaleMapping()).thenReturn(Collections.emptyMap());
         when(HREFLANG_CONFIG.getxDefault()).thenReturn(null);
 
-        assertEquals(factory.linksForResource("/").size(), 0);
+        assertEquals(factory.linksForResource("/", null).size(), 0);
     }
 
     @Test
@@ -39,7 +39,7 @@ class LocalisedLinkFactoryTest {
         when(HREFLANG_CONFIG.getHreflangToUrlLocaleMapping()).thenReturn(Collections.emptyMap());
         when(HREFLANG_CONFIG.getxDefault()).thenReturn("gb");
 
-        assertEquals(factory.linksForResource("/").size(), 1);
+        assertEquals(factory.linksForResource("/", null).size(), 1);
     }
 
     @Test
@@ -49,7 +49,7 @@ class LocalisedLinkFactoryTest {
         when(HREFLANG_CONFIG.getHreflangToUrlLocaleMapping()).thenReturn(hreflangToUrlLocaleMap);
         when(HREFLANG_CONFIG.getxDefault()).thenReturn(null);
 
-        List<LocalisedLink> links = factory.linksForResource("/path");
+        List<LocalisedLink> links = factory.linksForResource("/path", null);
         assertEquals(links.size(), 3);
         assertEquals(links.get(0).getHreflang(), "en-GB");
         assertEquals(links.get(1).getHreflang(), "fr");
