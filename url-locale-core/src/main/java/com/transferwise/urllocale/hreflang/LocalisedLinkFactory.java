@@ -12,6 +12,10 @@ public class LocalisedLinkFactory {
         this.hreflangConfig = hreflangConfig;
     }
 
+    public List<LocalisedLink> linksForResource(String resource) {
+        return linksForResource(resource, null);
+    }
+
     public List<LocalisedLink> linksForResource(String resource, String queryString) {
 
         List<LocalisedLink> list = hreflangConfig.getHreflangToUrlLocaleMapping().entrySet().stream()

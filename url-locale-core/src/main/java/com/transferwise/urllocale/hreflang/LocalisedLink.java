@@ -7,17 +7,21 @@ public class LocalisedLink implements Comparable<LocalisedLink> {
     private String hreflang;
     private String href;
 
+    public LocalisedLink(Hreflang hreflang, String domain, String urlLocale, String resource) {
+        this(hreflang, domain, urlLocale, resource, null);
+    }
+
+    public LocalisedLink(Hreflang hreflang, String domain, String urlLocale, String resource, String queryString) {
+        this.hreflang = hreflang.getValue();
+        this.href = parseHref(domain, urlLocale, resource, queryString);
+    }
+
     public String getHreflang() {
         return hreflang;
     }
 
     public String getHref() {
         return href;
-    }
-
-    LocalisedLink(Hreflang hreflang, String domain, String urlLocale, String resource, String queryString) {
-        this.hreflang = hreflang.getValue();
-        this.href = parseHref(domain, urlLocale, resource, queryString);
     }
 
     private String parseHref(String domain, String urlLocale, String resource, String queryString) {
