@@ -79,4 +79,11 @@ class LocalisedLinkTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new LocalisedLink(mockHreflang, "//example.test", "gb/", "/path"));
     }
+
+    @Test
+    void itPreservesQueryString() {
+        when(mockHreflang.getValue()).thenReturn("en-GB");
+        LocalisedLink link = new LocalisedLink(mockHreflang, "https://example.test", "gb", "/path", "a=1&b=2");
+        assertEquals(link.getHref(), "https://example.test/gb/path?a=1&b=2");
+    }
 }

@@ -13,15 +13,19 @@ public class LocalisedLinkFactory {
     }
 
     public List<LocalisedLink> linksForResource(String resource) {
+        return linksForResource(resource, null);
+    }
+
+    public List<LocalisedLink> linksForResource(String resource, String queryString) {
 
         List<LocalisedLink> list = hreflangConfig.getHreflangToUrlLocaleMapping().entrySet().stream()
-                .map(e -> new LocalisedLink(e.getKey(), domain, e.getValue(), resource))
+                .map(e -> new LocalisedLink(e.getKey(), domain, e.getValue(), resource, queryString))
                 .sorted()
                 .collect(Collectors.toList());
 
         String xDefault = hreflangConfig.getxDefault();
         if (xDefault != null) {
-            list.add(new LocalisedLink(Hreflang.fromString("x-default"), domain, xDefault, resource));
+            list.add(new LocalisedLink(Hreflang.fromString("x-default"), domain, xDefault, resource, queryString));
         }
         return list;
     }
