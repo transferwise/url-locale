@@ -56,7 +56,7 @@ class MyController {
         if (urlLocale.equals("gb")) {
             return doSomethingForUK();
         }
-        
+
         return "view";
     }
 }
@@ -66,7 +66,7 @@ class MyController {
 
 ```html
 <div th:if="${urlLocale == 'gb'}">
-    Some stuff for UK 
+    Some stuff for UK
 </div>
 ```
 
@@ -87,7 +87,7 @@ url-locale:
 ```
 
 * The `fallback` is the default locale that will be inferred when there is no url locale found in the URL.
-* The `mapping` is the url locale to locale mappings you want to offer in your app. 
+* The `mapping` is the url locale to locale mappings you want to offer in your app.
 
 ## Hreflang and localised link usage
 
@@ -103,4 +103,18 @@ hreflang:
     de-CH: ch
     de-DE: de
     zh-Hant: zh-hk
+```
+
+## Storing the locale in a cookie
+
+The `CookieAutoConfiguration` class enables storage of the locale in a cookie. The default name of the cookie is `localeData`, with default expiry of 1 year. Each of these values can be changed.
+
+### Example configuration
+
+In a project's application.yml file:
+
+```yaml
+locale-cookie:
+  cookie-name: localeData
+  max-age: 31557600
 ```
