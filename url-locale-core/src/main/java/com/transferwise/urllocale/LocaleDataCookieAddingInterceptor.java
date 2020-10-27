@@ -24,14 +24,15 @@ public class LocaleDataCookieAddingInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (!hasLocaleDataCookie(request)) {
-            LocaleContext localeContext = LocaleContextHolder.getLocaleContext();
-            if (localeContext != null && localeContext.getLocale() != null) {
-                Cookie localeDataCookie = new Cookie(cookieName, localeContext.getLocale().toLanguageTag().replace("-", "_"));
-                localeDataCookie.setMaxAge(cookieMaxAge);
-                localeDataCookie.setPath("/");
-                response.addCookie(localeDataCookie);
-            }
+        if (hasLocaleDataCookie(request)) {
+            return true;
+        }
+        LocaleContext localeContext = LocaleContextHolder.getLocaleContext();
+        if (localeContext != null && localeContext.getLocale() != null) {
+            Cookie localeDataCookie = new Cookie(cookieName, localeContext.getLocale().toLanguageTag().replace("-", "_"));
+            localeDataCookie.setMaxAge(cookieMaxAge);
+            localeDataCookie.setPath("/");
+            response.addCookie(localeDataCookie);
         }
         return true;
     }
