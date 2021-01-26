@@ -4,19 +4,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LocalisedLinkFactory {
-    private final String domain;
     private final HreflangConfig hreflangConfig;
 
-    public LocalisedLinkFactory(String domain, HreflangConfig hreflangConfig) {
-        this.domain = domain;
+    public LocalisedLinkFactory(HreflangConfig hreflangConfig) {
         this.hreflangConfig = hreflangConfig;
     }
 
-    public List<LocalisedLink> linksForResource(String resource) {
-        return linksForResource(resource, null);
+    public List<LocalisedLink> linksForResource(String domain, String resource) {
+        return linksForResource(domain, resource, null);
     }
 
-    public List<LocalisedLink> linksForResource(String resource, String queryString) {
+    public List<LocalisedLink> linksForResource(String domain, String resource, String queryString) {
 
         List<LocalisedLink> list = hreflangConfig.getHreflangToUrlLocaleMapping().entrySet().stream()
                 .map(e -> new LocalisedLink(e.getKey(), domain, e.getValue(), resource, queryString))
