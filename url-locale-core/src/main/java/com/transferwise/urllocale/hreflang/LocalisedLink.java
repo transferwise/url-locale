@@ -29,11 +29,14 @@ public class LocalisedLink implements Comparable<LocalisedLink> {
             if (!resource.startsWith("/")) {
                 resource = "/" + resource;
             }
-            String[] split = domain.split("://");
-            String protocol = split[0];
-            String hostname = split[1];
+            String[] splitForProtocol = domain.split("://");
+            String protocol = splitForProtocol[0];
+            String[] splitForHostname = splitForProtocol[1].split(":");
+            String hostname = splitForHostname[0];
+            int port = "".equals(splitForHostname[1]) ? -1 : Integer.parseInt(splitForHostname[1]);
+
             String path = "/" + urlLocale + resource;
-            URI uri = new URI(protocol, null, hostname, -1, path, queryString, null);
+            URI uri = new URI(protocol, null, hostname, port, path, queryString, null);
             return uri.toString();
 
         } catch (URISyntaxException exc) {

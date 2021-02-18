@@ -86,4 +86,10 @@ class LocalisedLinkTest {
         LocalisedLink link = new LocalisedLink(mockHreflang, "https://example.test", "gb", "/path", "a=1&b=2");
         assertEquals(link.getHref(), "https://example.test/gb/path?a=1&b=2");
     }
+
+    @Test
+    void itHandlesPorts() {
+        LocalisedLink link = new LocalisedLink(mockHreflang, "https://localhost:12345", "gb", "/path");
+        assertEquals("https://localhost:12345/gb/path", link.getHref());
+    }
 }
