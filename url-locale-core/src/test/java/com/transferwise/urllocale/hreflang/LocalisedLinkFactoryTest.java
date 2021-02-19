@@ -24,32 +24,32 @@ class LocalisedLinkFactoryTest {
 
     @Test
     void itReturnsAnEmptyCollectionIfNoHreflangMappingsAreProvided() {
-        LocalisedLinkFactory factory = new LocalisedLinkFactory(DOMAIN, HREFLANG_CONFIG);
+        LocalisedLinkFactory factory = new LocalisedLinkFactory(HREFLANG_CONFIG);
 
         when(HREFLANG_CONFIG.getHreflangToUrlLocaleMapping()).thenReturn(Collections.emptyMap());
         when(HREFLANG_CONFIG.getxDefault()).thenReturn(null);
 
-        assertEquals(factory.linksForResource("/").size(), 0);
+        assertEquals(factory.linksForResource(DOMAIN, "/").size(), 0);
     }
 
     @Test
     void itCreatesXDefaultLink() {
-        LocalisedLinkFactory factory = new LocalisedLinkFactory(DOMAIN, HREFLANG_CONFIG);
+        LocalisedLinkFactory factory = new LocalisedLinkFactory(HREFLANG_CONFIG);
 
         when(HREFLANG_CONFIG.getHreflangToUrlLocaleMapping()).thenReturn(Collections.emptyMap());
         when(HREFLANG_CONFIG.getxDefault()).thenReturn("gb");
 
-        assertEquals(factory.linksForResource("/").size(), 1);
+        assertEquals(factory.linksForResource(DOMAIN, "/").size(), 1);
     }
 
     @Test
     void itGeneratesLinksFromHreflangToUrlLocaleMapping() {
 
-        LocalisedLinkFactory factory = new LocalisedLinkFactory(DOMAIN, HREFLANG_CONFIG);
+        LocalisedLinkFactory factory = new LocalisedLinkFactory(HREFLANG_CONFIG);
         when(HREFLANG_CONFIG.getHreflangToUrlLocaleMapping()).thenReturn(hreflangToUrlLocaleMap);
         when(HREFLANG_CONFIG.getxDefault()).thenReturn(null);
 
-        List<LocalisedLink> links = factory.linksForResource("/path");
+        List<LocalisedLink> links = factory.linksForResource(DOMAIN, "/path");
         assertEquals(links.size(), 3);
         assertEquals(links.get(0).getHreflang(), "en-GB");
         assertEquals(links.get(1).getHreflang(), "fr");
