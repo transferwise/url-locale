@@ -29,20 +29,25 @@ public class LocalisedLink implements Comparable<LocalisedLink> {
             if (!resource.startsWith("/")) {
                 resource = "/" + resource;
             }
-            String[] splitForProtocol = domain.split("://");
-            String protocol = splitForProtocol[0];
-            String[] splitForHostname = splitForProtocol[1].split(":");
-            String hostname = splitForHostname[0];
-            int port = "".equals(splitForHostname[1]) ? -1 : Integer.parseInt(splitForHostname[1]);
 
-            String path = "/" + urlLocale + resource;
-            URI uri = new URI(protocol, null, hostname, port, path, queryString, null);
+            URI domainUri = new URI(domain);
+
+            if (domainUri.getScheme() == null || domainUri.getHost() == null) {
+                throw new IllegalArgumentException(String.format("Invalid Domain '%s'. Domain must include scheme and host", domain));
+            }
+
+            URI uri = new URI(
+                domainUri.getScheme(),
+                null,
+                domainUri.getHost(),
+                domainUri.getPort(),
+                "/" + urlLocale + resource,
+                queryString,
+                null
+            );
             return uri.toString();
-
         } catch (URISyntaxException exc) {
             throw new IllegalArgumentException(exc.getMessage());
-        } catch (IndexOutOfBoundsException exc) {
-            throw new IllegalArgumentException(String.format("Invalid domain: %s", domain));
         }
     }
 
