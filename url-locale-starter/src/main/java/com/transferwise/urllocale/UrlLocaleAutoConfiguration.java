@@ -46,9 +46,9 @@ public class UrlLocaleAutoConfiguration {
     }
 
     @Bean
-    public LocaleResolver localeResolver(UrlLocaleProperties config, Map<String, Locale> urlLocaleToLocaleMapping) {
+    public LocaleResolver urlLocaleLocaleResolver(UrlLocaleProperties config, Map<String, Locale> urlLocaleToLocaleMapping) {
         Locale fallback = Locale.forLanguageTag(config.getFallback());
-        if (!urlLocaleToLocaleMapping.values().contains(fallback)) {
+        if (!urlLocaleToLocaleMapping.containsValue(fallback)) {
             throw new RuntimeException("No mapping defined for fallback \"" + config.getFallback() + "\"");
         }
         return new UrlLocaleResolver(urlLocaleToLocaleMapping, fallback);
