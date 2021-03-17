@@ -1,9 +1,12 @@
 package com.transferwise.urllocale;
 
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.Filter;
@@ -12,6 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@AutoConfigureBefore(WebMvcAutoConfiguration.class)
 @Configuration
 @EnableConfigurationProperties(UrlLocaleAutoConfiguration.UrlLocaleProperties.class)
 public class UrlLocaleAutoConfiguration {
@@ -45,8 +49,8 @@ public class UrlLocaleAutoConfiguration {
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> Locale.forLanguageTag(e.getValue())));
     }
 
-    @Bean
-    public LocaleResolver urlLocaleLocaleResolver(UrlLocaleProperties config, Map<String, Locale> urlLocaleToLocaleMapping) {
+    @Bean(name = DispatcherServlet.LOCALE_RESOLVER_BEAN_NAME)
+    public LocaleResolver localeResolver(UrlLocaleProperties config, Map<String, Locale> urlLocaleToLocaleMapping) {
         Locale fallback = Locale.forLanguageTag(config.getFallback());
         if (!urlLocaleToLocaleMapping.containsValue(fallback)) {
             throw new RuntimeException("No mapping defined for fallback \"" + config.getFallback() + "\"");
