@@ -50,7 +50,7 @@ public class UrlLocaleAutoConfiguration {
     }
 
     @Bean(name = DispatcherServlet.LOCALE_RESOLVER_BEAN_NAME)
-    public LocaleResolver urlLocaleLocaleResolver(UrlLocaleProperties config, Map<String, Locale> urlLocaleToLocaleMapping) {
+    public LocaleResolver localeResolver(UrlLocaleProperties config, Map<String, Locale> urlLocaleToLocaleMapping) {
         Locale fallback = Locale.forLanguageTag(config.getFallback());
         if (!urlLocaleToLocaleMapping.containsValue(fallback)) {
             throw new RuntimeException("No mapping defined for fallback \"" + config.getFallback() + "\"");
