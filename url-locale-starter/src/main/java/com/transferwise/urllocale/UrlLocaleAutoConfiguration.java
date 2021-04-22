@@ -19,12 +19,14 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableConfigurationProperties(UrlLocaleAutoConfiguration.UrlLocaleProperties.class)
 public class UrlLocaleAutoConfiguration {
+
     @ConfigurationProperties(prefix = "url-locale")
     static class UrlLocaleProperties {
         private Map<String, String> mapping = new HashMap<String, String>() {{
             put("gb", "en-GB");
         }};
         private String fallback = "en-gb";
+        private boolean langParameterEnabled = false;
 
         public Map<String, String> getMapping() {
             return mapping;
@@ -41,6 +43,14 @@ public class UrlLocaleAutoConfiguration {
         public void setFallback(String fallback) {
             this.fallback = fallback;
         }
+
+        public boolean isLangParameterEnabled() {
+            return langParameterEnabled;
+        }
+
+        public void setLangParameterEnabled(boolean langParameterEnabled) {
+            this.langParameterEnabled = langParameterEnabled;
+        }
     }
 
     @Bean
@@ -55,7 +65,7 @@ public class UrlLocaleAutoConfiguration {
         if (!urlLocaleToLocaleMapping.containsValue(fallback)) {
             throw new RuntimeException("No mapping defined for fallback \"" + config.getFallback() + "\"");
         }
-        return new UrlLocaleResolver(urlLocaleToLocaleMapping, fallback);
+        return new UrlLocaleResolver(urlLocaleToLocaleMapping, fallback, config.isLangParameterEnabled());
     }
 
     @Bean
