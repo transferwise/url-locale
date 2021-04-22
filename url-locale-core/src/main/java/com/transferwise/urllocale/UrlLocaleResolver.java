@@ -31,14 +31,14 @@ public class UrlLocaleResolver implements LocaleResolver {
     @Override
     public Locale resolveLocale(HttpServletRequest request) {
         String urlLocaleStr = (String) request.getAttribute(URL_LOCALE_ATTRIBUTE);
-        Locale urlLocale = urlLocaleToLocaleMapping.getOrDefault(urlLocaleStr, fallback);
+        Locale locale = urlLocaleToLocaleMapping.getOrDefault(urlLocaleStr, fallback);
 
         String lang = resolveLangParameter(request);
         if (lang != null) {
-            return new Locale(lang, urlLocale.getCountry());
+            locale = new Locale(lang, locale.getCountry());
         }
 
-        return urlLocale;
+        return locale;
     }
 
     @Override

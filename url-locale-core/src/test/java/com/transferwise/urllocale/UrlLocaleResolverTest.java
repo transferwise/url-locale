@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class UrlLocaleResolverTest {
 
-    @ParameterizedTest(name = "Mapping \"{0}\" should match locale \"{1}\"")
+    @ParameterizedTest(name = "It should resolve url locale /{0}/ to locale [{1}]")
     @CsvSource({
         "zh-hk, zh-HK",
         "de, de-DE",
@@ -29,7 +29,11 @@ class UrlLocaleResolverTest {
         urlLocaleToLocaleMapping.put("de", Locale.GERMANY);
         urlLocaleToLocaleMapping.put("it", Locale.ITALY);
         urlLocaleToLocaleMapping.put("zh-hk", new Locale("zh", "HK"));
-        UrlLocaleResolver resolver = new UrlLocaleResolver(urlLocaleToLocaleMapping, Locale.UK, false);
+        UrlLocaleResolver resolver = new UrlLocaleResolver(
+            urlLocaleToLocaleMapping,
+            Locale.UK,
+            false
+        );
 
         Locale actualLocale = resolver.resolveLocale(requestWithUrlLocaleAttribute(urlLocale));
 
@@ -46,24 +50,29 @@ class UrlLocaleResolverTest {
     void itShouldNotSupportLocaleChange() {
         UrlLocaleResolver resolver = new UrlLocaleResolver(new HashMap<>(), Locale.UK, false);
         assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(
-            () -> resolver.setLocale(new MockHttpServletRequest(), new MockHttpServletResponse(), Locale.UK)
+            () -> resolver.setLocale(new MockHttpServletRequest(), new MockHttpServletResponse(), new Locale("en"))
         );
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "It should resolve lang parameter [{1}] for url locale /{0}/ to [{2}]")
     @CsvSource({
-        "de, ,   de",
+        "de, de, de",
         "de, es, es",
-        "xx, ,   en",  // invalid url locale, fallback to default language
-        "de, xx, de",  // invalid lang param, fallback to url locale language
+        "de, ES, es",
+        "de, xx, de",  // invalid lang param
         "de, '', de",  // empty lang param
         "de, ,   de",  // null lang param
+        "xx, ,   en",  // invalid url locale, fallback to default language
     })
     void itShouldResolveLangParameter(String urlLocale, String langParam, String expectedLanguage) {
         Map<String, Locale> urlLocaleToLocaleMapping = new HashMap<>();
         urlLocaleToLocaleMapping.put("de", new Locale("de", "DE"));
         urlLocaleToLocaleMapping.put("es", new Locale("es", "ES"));
-        UrlLocaleResolver resolver = new UrlLocaleResolver(urlLocaleToLocaleMapping, Locale.UK, true);
+        UrlLocaleResolver resolver = new UrlLocaleResolver(
+            urlLocaleToLocaleMapping,
+            new Locale("en"),
+            true
+        );
 
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.setAttribute(URL_LOCALE_ATTRIBUTE, urlLocale);
@@ -72,5 +81,25 @@ class UrlLocaleResolverTest {
         String actualLanguage = resolver.resolveLocale(mockRequest).getLanguage();
 
         assertThat(actualLanguage).isEqualTo(expectedLanguage);
+    }
+
+    @Test
+    void itShouldIgnoreLangParameterNotEnabled() {
+        Map<String, Locale> urlLocaleToLocaleMapping = new HashMap<>();
+        urlLocaleToLocaleMapping.put("de", new Locale("de", "DE"));
+        urlLocaleToLocaleMapping.put("es", new Locale("es", "ES"));
+        UrlLocaleResolver resolver = new UrlLocaleResolver(
+            urlLocaleToLocaleMapping,
+            new Locale("en"),
+            false
+        );
+
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.setAttribute(URL_LOCALE_ATTRIBUTE, "de");
+        mockRequest.setParameter("lang", "es");
+
+        String actualLanguage = resolver.resolveLocale(mockRequest).getLanguage();
+
+        assertThat(actualLanguage).isEqualTo("de");
     }
 }
