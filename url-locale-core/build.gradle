@@ -4,8 +4,8 @@ ext {
 }
 
 dependencies {
-    implementation 'javax.servlet:javax.servlet-api:3.1.0'
-    implementation "org.springframework:spring-webmvc:$springVersion"
+    compile 'javax.servlet:javax.servlet-api:3.1.0'
+    compile "org.springframework:spring-webmvc:$springVersion"
 
     testImplementation 'org.assertj:assertj-core:3.19.0'
     testImplementation "org.springframework:spring-test:$springVersion"
