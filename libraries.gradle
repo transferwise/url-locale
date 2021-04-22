@@ -1,0 +1,23 @@
+ext {
+    springBootVersion = '2.4.5'
+
+    libraries = [
+            // version defined
+            springBootDependencies              : "org.springframework.boot:spring-boot-dependencies:${springBootVersion}",
+
+            // versions managed by spring-boot-dependencies platform
+            springBoot                          : "org.springframework.boot:spring-boot",
+            springBootConfigurationProcessor    : "org.springframework.boot:spring-boot-configuration-processor",
+            springBootStarterTest               : "org.springframework.boot:spring-boot-starter-test",
+            springBootStarterWeb                : "org.springframework.boot:spring-boot-starter-web",
+            springBootAutoconfigure             : "org.springframework.boot:spring-boot-autoconfigure",
+            micrometerCore                      : "io.micrometer:micrometer-core",
+            lombok                              : "org.projectlombok:lombok",
+            slf4j                               : "org.slf4j:slf4j-api",
+            junitJupiter                        : "org.junit.jupiter:junit-jupiter",
+            assertJCore                         : "org.assertj:assertj-core",
+            logback                             : "ch.qos.logback:logback-classic",
+    ]
+}
+
+

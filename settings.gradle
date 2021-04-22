@@ -1,4 +1,11 @@
-rootProject.name= 'url-locale'
+pluginManagement {
+    repositories {
+        maven {
+            setUrl("https://arti.tw.ee/artifactory/plugins-release")
+        }
+        mavenLocal()
+    }
+}
 
 include 'url-locale-core'
 include 'url-locale-starter'

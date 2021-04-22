@@ -1,0 +1,90 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+buildscript {
+    repositories {
+        maven {
+            setUrl("https://arti.tw.ee/artifactory/plugins-release")
+        }
+        mavenLocal()
+    }
+}
+
+apply plugin: "java-library"
+apply plugin: "idea"
+
+apply from: "${rootDir}/libraries.gradle"
+
+group = "com.transferwise.common"
+
+repositories {
+    maven {
+        setUrl("https://arti.tw.ee/artifactory/libs-release")
+    }
+    mavenLocal()
+}
+
+dependencies {
+    annotationProcessor(platform(libraries.springBootDependencies))
+    compileOnly(platform(libraries.springBootDependencies))
+    implementation(platform(libraries.springBootDependencies))
+    testAnnotationProcessor(platform(libraries.springBootDependencies))
+
+    implementation(libraries.slf4j)
+
+    annotationProcessor(libraries.lombok)
+
+    compileOnly(libraries.lombok)
+
+    testAnnotationProcessor(libraries.lombok)
+
+    testImplementation(libraries.lombok)
+    testImplementation(libraries.junitJupiter)
+    testImplementation(libraries.assertJCore)
+    testImplementation(libraries.logback)
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
+    withJavadocJar()
+}
+
+jar {
+    manifest {
+        attributes(
+                "Implementation-Title": projectName,
+                "Implementation-Version": archiveVersion
+        )
+    }
+}
+
+compileJava {
+    options.encoding = 'utf-8'
+    options.compilerArgs << '-parameters'
+    options.compilerArgs << '-Xlint'
+    options.compilerArgs << '-Xlint:-processing'
+}
+
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events TestLogEvent.STARTED, TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.PASSED,
+                TestLogEvent.STANDARD_ERROR
+        showExceptions = true
+        showStackTraces = true
+        exceptionFormat = TestExceptionFormat.FULL
+    }
+}
+
+clean.doFirst {
+    delete "out"
+}
+
+yamlValidator {
+    searchPaths = ['src']
+    allowDuplicates = false
+    searchRecursive = true
+}

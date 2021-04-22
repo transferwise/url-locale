@@ -1,24 +1,16 @@
-ext {
-    junitVersion = '5.2.0'
-    springVersion = '4.3.10.RELEASE'
-}
+ext.projectName = "URL Locale"
+ext.projectDescription = "URL Locale"
+ext.projectArtifactName = "url-locale-core"
+
+apply from: "${rootDir}/libraries.gradle"
+apply from: "${rootDir}/build.common.gradle"
+apply from: "${rootDir}/publishing.gradle"
 
 dependencies {
-    implementation 'javax.servlet:javax.servlet-api:3.1.0'
-    implementation "org.springframework:spring-webmvc:$springVersion"
+    implementation(libraries.micrometerCore)
+    api 'javax.servlet:javax.servlet-api:3.1.0'
+    api(libraries.springBootStarterWeb)
 
-    testImplementation 'org.assertj:assertj-core:3.19.0'
-    testImplementation "org.springframework:spring-test:$springVersion"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
-    testImplementation 'org.mockito:mockito-core:2.+'
-
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events 'passed', 'skipped', 'failed'
-    }
+    testImplementation(libraries.springBootStarterTest)
+    testImplementation 'org.mockito:mockito-core:3.+'
 }

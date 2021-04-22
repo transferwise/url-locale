@@ -1,60 +1,19 @@
-allprojects {
-    group = 'com.github.transferwise'
-    version = '8.3.0'
-}
-
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'maven-publish'
-    apply plugin: 'idea'
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
+buildscript {
     repositories {
-        maven { url 'https://jitpack.io' }
-        mavenCentral()
-    }
-
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
-        from javadoc.destinationDir
-    }
-
-    artifacts {
-        archives sourcesJar
-        archives javadocJar
-    }
-
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
+        maven {
+            setUrl("https://arti.tw.ee/artifactory/plugins-release")
         }
-    }
-
-    install {
-        repositories.mavenInstaller {
-            pom.project {
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
-                }
-            }
-        }
+        mavenLocal()
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.7'
+plugins {
+    id 'org.springframework.boot' version '2.4.5' apply false
+    id "at.zierler.yamlvalidator" version "1.5.0"
+}
+
+yamlValidator {
+    searchPaths = ['.circleci/']
+    allowDuplicates = false
+    searchRecursive = true
 }

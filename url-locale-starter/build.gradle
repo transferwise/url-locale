@@ -1,5 +1,17 @@
-dependencies {
-    compile project(':url-locale-core')
+ext.projectName = "URL Locale"
+ext.projectDescription = "URL Locale"
+ext.projectArtifactName = "url-locale-starter"
 
-    compile 'org.springframework.boot:spring-boot-autoconfigure:2.0.1.RELEASE'
+apply from: "${rootDir}/libraries.gradle"
+apply from: "${rootDir}/build.common.gradle"
+apply from: "${rootDir}/publishing.gradle"
+
+dependencies {
+    annotationProcessor(libraries.springBootConfigurationProcessor)
+
+    implementation(libraries.springBootAutoconfigure)
+
+    api project(":url-locale-core:")
+
+    testImplementation(libraries.springBootStarterTest)
 }
