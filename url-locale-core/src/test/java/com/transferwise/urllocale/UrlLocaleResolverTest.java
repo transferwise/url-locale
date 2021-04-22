@@ -84,7 +84,7 @@ class UrlLocaleResolverTest {
     }
 
     @Test
-    void itShouldIgnoreLangParameterNotEnabled() {
+    void itShouldIgnoreLangParameterWhenNotEnabled() {
         Map<String, Locale> urlLocaleToLocaleMapping = new HashMap<>();
         urlLocaleToLocaleMapping.put("de", new Locale("de", "DE"));
         urlLocaleToLocaleMapping.put("es", new Locale("es", "ES"));
