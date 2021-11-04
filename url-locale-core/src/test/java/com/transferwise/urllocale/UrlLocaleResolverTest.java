@@ -83,6 +83,31 @@ class UrlLocaleResolverTest {
         assertThat(actualLanguage).isEqualTo(expectedLanguage);
     }
 
+    @ParameterizedTest(name = "It should resolve lang parameter [{1}] for url locale /{0}/ to [{1}]")
+    @CsvSource({
+            "de, zh-hk, zh_hk",
+            "de, zh_HK, zh_hk",
+    })
+    void itShouldResolveFiveCharacterLangParameters(String urlLocale, String langParam, String expectedLanguage) {
+        Map<String, Locale> urlLocaleToLocaleMapping = new HashMap<>();
+        urlLocaleToLocaleMapping.put("de", new Locale("de", "DE"));
+        urlLocaleToLocaleMapping.put("es", new Locale("es", "ES"));
+        urlLocaleToLocaleMapping.put("zh-hk", new Locale("zh", "HK"));
+        UrlLocaleResolver resolver = new UrlLocaleResolver(
+                urlLocaleToLocaleMapping,
+                new Locale("en"),
+                true
+        );
+
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.setAttribute(URL_LOCALE_ATTRIBUTE, urlLocale);
+        mockRequest.setParameter("lang", langParam);
+
+        String actualLanguage = resolver.resolveLocale(mockRequest).getLanguage();
+
+        assertThat(actualLanguage).isEqualTo(expectedLanguage);
+    }
+
     @Test
     void itShouldIgnoreLangParameterWhenNotEnabled() {
         Map<String, Locale> urlLocaleToLocaleMapping = new HashMap<>();
