@@ -17,6 +17,8 @@ public class LocaleDataCookieAddingInterceptor implements HandlerInterceptor {
     private final String cookieName;
     private final int cookieMaxAge;
 
+    private final String FIVE_CHARACTER_LANGUAGE = "zh_HK";
+
     public LocaleDataCookieAddingInterceptor(String cookieName, int cookieMaxAge){
         this.cookieName = cookieName;
         this.cookieMaxAge = cookieMaxAge;
@@ -29,12 +31,21 @@ public class LocaleDataCookieAddingInterceptor implements HandlerInterceptor {
         }
         LocaleContext localeContext = LocaleContextHolder.getLocaleContext();
         if (localeContext != null && localeContext.getLocale() != null) {
-            Cookie localeDataCookie = new Cookie(cookieName, localeContext.getLocale().toLanguageTag().replace("-", "_"));
+            String language = getLanguageFromLocaleContext(localeContext);
+            Cookie localeDataCookie = new Cookie(cookieName, language);
             localeDataCookie.setMaxAge(cookieMaxAge);
             localeDataCookie.setPath("/");
             response.addCookie(localeDataCookie);
         }
         return true;
+    }
+
+    private String getLanguageFromLocaleContext(LocaleContext localeContext) {
+        if (localeContext.getLocale().toLanguageTag().replace("-", "_").equalsIgnoreCase(FIVE_CHARACTER_LANGUAGE)) {
+            return FIVE_CHARACTER_LANGUAGE;
+        } else {
+            return localeContext.getLocale().getLanguage();
+        }
     }
 
     @Override
