@@ -23,7 +23,7 @@ public class UrlLocaleResolver implements LocaleResolver {
 
     static {
         fiveCharacterLanguages  = new HashMap<>();
-        fiveCharacterLanguages.put("hk", "zh_HK");
+        fiveCharacterLanguages.put("hk", "zh_hk");
     }
 
     public UrlLocaleResolver(Map<String, Locale> urlLocaleToLocaleMapping, Locale fallback, boolean langParameterEnabled) {
@@ -43,12 +43,19 @@ public class UrlLocaleResolver implements LocaleResolver {
 
         String lang = resolveLangParameter(request);
         if (lang != null) {
-            locale = new Locale(lang, locale.getCountry());
+            locale = getLocaleFromLangParam(lang, locale);
         }
 
         return locale;
     }
 
+    private Locale getLocaleFromLangParam(String lang, Locale locale) {
+        if (fiveCharacterLanguages.containsValue(lang.toLowerCase())) {
+            return new Locale(lang.substring(0, 2), lang.substring(3));
+        } else {
+            return new Locale(lang, locale.getCountry());
+        }
+    }
     @Override
     public void setLocale(HttpServletRequest request, HttpServletResponse response, Locale locale) {
         throw new UnsupportedOperationException();
