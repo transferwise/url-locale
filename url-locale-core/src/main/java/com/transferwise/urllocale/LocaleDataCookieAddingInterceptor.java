@@ -19,7 +19,7 @@ public class LocaleDataCookieAddingInterceptor implements HandlerInterceptor {
     private final String cookieName;
     private final int cookieMaxAge;
 
-    private final List<String> FIVE_CHARACTER_LANGUAGE = Collections.singletonList("zh_HK");
+    private final List<String> FIVE_CHARACTER_LANGUAGES = Collections.singletonList("zh_HK");
 
     public LocaleDataCookieAddingInterceptor(String cookieName, int cookieMaxAge){
         this.cookieName = cookieName;
