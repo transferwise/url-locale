@@ -2,6 +2,7 @@ package com.transferwise.urllocale;
 
 import static com.transferwise.urllocale.UrlLocaleExtractorFilter.URL_LOCALE_ATTRIBUTE;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -18,12 +19,19 @@ public class UrlLocaleResolver implements LocaleResolver {
     private final boolean langParameterEnabled;
     private final Set<String> supportedLanguages;
 
+    private static final Map<String, String> fiveCharacterLanguages;
+
+    static {
+        fiveCharacterLanguages  = new HashMap<>();
+        fiveCharacterLanguages.put("hk", "zh_hk");
+    }
+
     public UrlLocaleResolver(Map<String, Locale> urlLocaleToLocaleMapping, Locale fallback, boolean langParameterEnabled) {
         this.fallback = fallback;
         this.urlLocaleToLocaleMapping = urlLocaleToLocaleMapping;
         this.supportedLanguages = urlLocaleToLocaleMapping.values()
             .stream()
-            .map(Locale::getLanguage)
+            .map(locale -> getLanguages(locale))
             .collect(Collectors.toSet());
         this.langParameterEnabled = langParameterEnabled;
     }
@@ -35,12 +43,19 @@ public class UrlLocaleResolver implements LocaleResolver {
 
         String lang = resolveLangParameter(request);
         if (lang != null) {
-            locale = new Locale(lang, locale.getCountry());
+            locale = getLocaleFromLangParam(lang, locale);
         }
 
         return locale;
     }
 
+    private Locale getLocaleFromLangParam(String lang, Locale locale) {
+        if (fiveCharacterLanguages.containsValue(lang.toLowerCase())) {
+            return new Locale(lang.substring(0, 2), lang.substring(3));
+        } else {
+            return new Locale(lang, locale.getCountry());
+        }
+    }
     @Override
     public void setLocale(HttpServletRequest request, HttpServletResponse response, Locale locale) {
         throw new UnsupportedOperationException();
@@ -57,10 +72,20 @@ public class UrlLocaleResolver implements LocaleResolver {
             return null;
         }
 
+        lang = lang.replace("-", "_");
+
         if (!supportedLanguages.contains(lang.toLowerCase())) {
             return null;
         }
 
         return lang;
+    }
+
+    private String getLanguages(Locale locale) {
+        String localeCountry = locale.getCountry().toLowerCase();
+        if (fiveCharacterLanguages.containsKey(localeCountry)) {
+            return fiveCharacterLanguages.get(localeCountry).toLowerCase();
+        }
+        return locale.getLanguage();
     }
 }
