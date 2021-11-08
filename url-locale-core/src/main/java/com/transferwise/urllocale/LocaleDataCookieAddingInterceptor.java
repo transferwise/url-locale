@@ -10,6 +10,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class LocaleDataCookieAddingInterceptor implements HandlerInterceptor {
@@ -17,7 +19,7 @@ public class LocaleDataCookieAddingInterceptor implements HandlerInterceptor {
     private final String cookieName;
     private final int cookieMaxAge;
 
-    private final String FIVE_CHARACTER_LANGUAGE = "zh_HK";
+    private final List<String> FIVE_CHARACTER_LANGUAGE = Collections.singletonList("zh_HK");
 
     public LocaleDataCookieAddingInterceptor(String cookieName, int cookieMaxAge){
         this.cookieName = cookieName;
@@ -41,8 +43,9 @@ public class LocaleDataCookieAddingInterceptor implements HandlerInterceptor {
     }
 
     private String getLanguageFromLocaleContext(LocaleContext localeContext) {
-        if (localeContext.getLocale().toLanguageTag().replace("-", "_").equalsIgnoreCase(FIVE_CHARACTER_LANGUAGE)) {
-            return FIVE_CHARACTER_LANGUAGE;
+        String languageTag = localeContext.getLocale().toLanguageTag().replace("-", "_");
+        if (FIVE_CHARACTER_LANGUAGE.contains(languageTag)) {
+            return languageTag;
         } else {
             return localeContext.getLocale().getLanguage();
         }
