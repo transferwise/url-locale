@@ -44,7 +44,7 @@ public class LocaleDataCookieAddingInterceptor implements HandlerInterceptor {
 
     private String getLanguageFromLocaleContext(LocaleContext localeContext) {
         String languageTag = localeContext.getLocale().toLanguageTag().replace("-", "_");
-        if (FIVE_CHARACTER_LANGUAGE.contains(languageTag)) {
+        if (FIVE_CHARACTER_LANGUAGES.contains(languageTag)) {
             return languageTag;
         } else {
             return localeContext.getLocale().getLanguage();
