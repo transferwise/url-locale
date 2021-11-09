@@ -37,6 +37,7 @@ public class LocaleDataCookieAddingInterceptor implements HandlerInterceptor {
             Cookie localeDataCookie = new Cookie(cookieName, language);
             localeDataCookie.setMaxAge(cookieMaxAge);
             localeDataCookie.setPath("/");
+            localeDataCookie.setSecure(true);
             response.addCookie(localeDataCookie);
         }
         return true;
