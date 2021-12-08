@@ -14,7 +14,9 @@ env:
 jobs:
   build_and_test:
     name: Build and Test
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - production
 
     steps:
       - name: Checkout repository
@@ -51,7 +53,9 @@ jobs:
 
   release:
     name: Create new release as draft
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - production
     if: github.ref == 'refs/heads/master'
     needs:
       - build_and_test
