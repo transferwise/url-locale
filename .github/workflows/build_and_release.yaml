@@ -21,7 +21,7 @@ jobs:
     runs-on:
       - self-hosted
       - production
-      - medium
+      - xlarge
 
     steps:
       - name: Checkout repository
