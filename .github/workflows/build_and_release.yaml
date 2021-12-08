@@ -14,9 +14,7 @@ env:
 jobs:
   build_and_test:
     name: Build and Test
-    runs-on:
-      - self-hosted
-      - production
+    runs-on: ubuntu-latest
     container: docker.tw.ee/actions_java11
 
     steps:
