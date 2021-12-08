@@ -52,7 +52,7 @@ jobs:
   release:
     name: Create new release as draft
     runs-on: ubuntu-latest
-#    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     needs:
       - build_and_test
 
