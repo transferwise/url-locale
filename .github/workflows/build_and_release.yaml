@@ -1,0 +1,85 @@
+name: build_and_release
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - main
+
+env:
+  TERM: vt100
+  GRADLE_OPTS: -Dorg.gradle.console=plain
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    runs-on:
+      - self-hosted
+      - production
+    container: docker.tw.ee/actions_java11
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Retrieve cache
+        uses: actions/cache@v2
+        with:
+          path: .gradle
+          key: host-finder-gradle-${{ hashFiles( 'build.gradle') }}
+
+      - name: Run tests
+        run: ./gradlew check --console=plain --no-daemon --stacktrace
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          path: ./url-locale-core/build/test-results/**/*.xml
+          name: test_results_build
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: ./**/build/test-results/**/*.xml
+
+  release:
+    name: Create new release as draft
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    container: docker.tw.ee/actions_java11
+    needs:
+      - build_and_test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Retrieve cache
+        uses: actions/cache@v2
+        with:
+          path: .gradle
+          key: host-finder-gradle-${{ hashFiles( 'build.gradle') }}}
+
+      - name: Determine Branch
+        id: branch
+        uses: transferwise/sanitize-branch-name@v1
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.branch.outputs.sanitized-branch-name }}
+          release_name: Release ${{ steps.branch.outputs.sanitized-branch-name }} (Amend name post-release)
+          body: |
+            Included the release changes:
+            - Here
+          draft: true
+          prerelease: false
