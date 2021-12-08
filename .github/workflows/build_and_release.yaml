@@ -7,6 +7,10 @@ on:
       - master
       - main
 
+concurrency:
+  group: ${GITHUB_REF##*/}
+  cancel-in-progress: true
+
 env:
   TERM: vt100
   GRADLE_OPTS: -Dorg.gradle.console=plain
@@ -17,6 +21,7 @@ jobs:
     runs-on:
       - self-hosted
       - production
+      - medium
 
     steps:
       - name: Checkout repository
