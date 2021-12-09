@@ -18,7 +18,7 @@ env:
 jobs:
   build_and_test:
     name: Build and Test
-      runs-on: ubuntu-lateste
+    runs-on: ubuntu-lateste
 
     steps:
       - name: Checkout repository
