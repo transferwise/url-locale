@@ -1,5 +1,5 @@
 dependencies {
     compile project(':url-locale-core')
 
-    compile 'org.springframework.boot:spring-boot-autoconfigure:2.0.1.RELEASE'
+    compile 'org.springframework.boot:spring-boot-autoconfigure:2.5.12'
 }
