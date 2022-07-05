@@ -33,7 +33,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Retrieve cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .gradle
           key: host-finder-gradle-${{ hashFiles( 'build.gradle') }}
@@ -73,7 +73,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Retrieve cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .gradle
           key: host-finder-gradle-${{ hashFiles( 'build.gradle') }}}
