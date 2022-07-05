@@ -42,7 +42,7 @@ jobs:
         run: ./gradlew check --console=plain --no-daemon --stacktrace
 
       - name: Upload test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: ./url-locale-core/build/test-results/**/*.xml
           name: test_results_build
