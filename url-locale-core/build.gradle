@@ -1,6 +1,6 @@
 ext {
     junitVersion = '5.2.0'
-    springVersion = '4.3.10.RELEASE'
+    springVersion = '5.3.22'
 }
 
 dependencies {
