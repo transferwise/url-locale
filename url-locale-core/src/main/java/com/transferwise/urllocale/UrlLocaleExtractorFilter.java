@@ -20,7 +20,7 @@ public class UrlLocaleExtractorFilter implements Filter {
     @Deprecated // Prefer URL_LOCALE_ATTRIBUTE. Not removing as likely to be used in templates that may not be caught in dev.
     static final String LEGACY_LOCALE_ATTRIBUTE = "locale";
     public static final String URL_LOCALE_ATTRIBUTE = "urlLocale";
-    private static final Pattern PATH_PATTERN = Pattern.compile("^/([a-z]{2}(-[a-z]{2})?)/.*$");
+    private static final Pattern PATH_PATTERN = Pattern.compile("^/(api/)?([a-z]{2}(-[a-z]{2})?)/.*$");
 
     private Set<String> supportedUrlLocales;
 
@@ -42,12 +42,11 @@ public class UrlLocaleExtractorFilter implements Filter {
 
         Matcher matcher = PATH_PATTERN.matcher(req.getServletPath());
         if (matcher.matches()) {
-            String urlLocale = matcher.group(1);
+            String urlLocale = matcher.group(2);
             if (!supportedUrlLocales.contains(urlLocale)) {
                 ((HttpServletResponse) response).sendError(SC_NOT_FOUND);
                 return;
             }
-
             request.setAttribute(URL_LOCALE_ATTRIBUTE, urlLocale);
             request.setAttribute(LEGACY_LOCALE_ATTRIBUTE, urlLocale);
         }

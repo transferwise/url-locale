@@ -42,11 +42,14 @@ class UrlLocaleExtractorFilterTest {
         "/gb/, gb",
         "/zh-hk/, zh-hk",
         "/es/some/path, es",
+        "/api/gb/someApiPath, gb",
+        "/api/ar/someApiPath, ar"
     })
     void itShouldSetRequestUrlLocaleAttribute(String path, String expectedUrlLocale) {
         whenUrlLocaleMappingConfigured("gb");
         whenUrlLocaleMappingConfigured("es");
         whenUrlLocaleMappingConfigured("zh-hk");
+        whenUrlLocaleMappingConfigured("ar");
 
         whenPathIs(path);
 
