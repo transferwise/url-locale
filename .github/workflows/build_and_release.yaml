@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .gradle
-          key: host-finder-gradle-${{ hashFiles( 'build.gradle') }}
+          key: url-locale-gradle-${{ hashFiles( 'build.gradle') }}
 
       - name: Run tests
         run: ./gradlew check --console=plain --no-daemon --stacktrace
@@ -54,9 +54,9 @@ jobs:
           files: ./**/build/test-results/**/*.xml
 
   release:
-    name: Create new release as draft
+    name: Creates a new release
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+#    if: github.ref == 'refs/heads/master'
     needs:
       - build_and_test
 
@@ -76,7 +76,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .gradle
-          key: host-finder-gradle-${{ hashFiles( 'build.gradle') }}}
+          key: url-locale-gradle-${{ hashFiles( 'build.gradle') }}}
 
       - name: Determine Branch
         id: branch
@@ -88,10 +88,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.branch.outputs.sanitized-branch-name }}
-          release_name: Release ${{ steps.branch.outputs.sanitized-branch-name }} (Amend name post-release)
+          tag_name: 8.4.1
+          release_name: 8.4.1
           body: |
             Included the release changes:
             - Here
-          draft: true
-          prerelease: false
