@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .gradle
-          key: host-finder-gradle-${{ hashFiles( 'build.gradle') }}
+          key: url-locale-gradle-${{ hashFiles( 'build.gradle') }}
 
       - name: Run tests
         run: ./gradlew check --console=plain --no-daemon --stacktrace
@@ -54,9 +54,9 @@ jobs:
           files: ./**/build/test-results/**/*.xml
 
   release:
-    name: Create new release as draft
+    name: Creates a new release
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+#    if: github.ref == 'refs/heads/master'
     needs:
       - build_and_test
 
@@ -76,7 +76,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .gradle
-          key: host-finder-gradle-${{ hashFiles( 'build.gradle') }}}
+          key: url-locale-gradle-${{ hashFiles( 'build.gradle') }}}
 
       - name: Determine Branch
         id: branch
@@ -93,5 +93,5 @@ jobs:
           body: |
             Included the release changes:
             - Here
-          draft: true
+          draft: false
           prerelease: false
