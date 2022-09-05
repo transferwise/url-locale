@@ -88,10 +88,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.branch.outputs.sanitized-branch-name }}
-          release_name: Release ${{ steps.branch.outputs.sanitized-branch-name }} (Amend name post-release)
+          tag_name: 8.4.1
+          release_name: 8.4.1
           body: |
             Included the release changes:
             - Here
-          draft: false
-          prerelease: false
