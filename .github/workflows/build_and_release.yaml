@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .gradle
-          key: url-locale-gradle-${{ hashFiles( 'gradle.properties') }}
+          key: url-locale-gradle-${{ hashFiles( 'build.gradle') }}
 
       - name: Run tests
         run: ./gradlew check --console=plain --no-daemon --stacktrace
@@ -76,7 +76,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .gradle
-          key: url-locale-gradle-${{ hashFiles( 'gradle.properties') }}}
+          key: url-locale-gradle-${{ hashFiles( 'build.gradle') }}}
 
       - name: Set tag
         id: set-tag
