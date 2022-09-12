@@ -78,9 +78,9 @@ jobs:
           path: .gradle
           key: url-locale-gradle-${{ hashFiles( 'build.gradle') }}}
 
-      - name: Determine Branch
-        id: branch
-        uses: transferwise/sanitize-branch-name@v1
+      - name: Set tag
+        id: set-tag
+        run: echo '::set-output name=tag::$(grep '^version=.*$' gradle.properties | sed "s/^version=\(.*\)$/\1/")'
 
       - name: Create Release
         id: create_release
@@ -88,8 +88,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: grep '^version=.*$' gradle.properties | sed "s/^version=\(.*\)$/\1/"
-          release_name: grep '^version=.*$' gradle.properties | sed "s/^version=\(.*\)$/\1/"
+          tag_name: ${{ steps.set-tag.outputs.tag }}
+          release_name: ${{ steps.set-tag.outputs.tag }}
           body: |
             Included the release changes:
             - Here
