@@ -44,7 +44,7 @@ jobs:
       - name: Upload test results
         uses: actions/upload-artifact@v2
         with:
-          path: ./url-locale-core/build/test-results/**/*.xml
+          path: ./url-locale/build/test-results/**/*.xml
           name: test_results_build
 
       - name: Publish Unit Test Results
@@ -80,13 +80,13 @@ jobs:
 
       - name: Set tag
         id: set-tag
-        run: echo '::set-output name=tag::$(grep '^version=.*$' gradle.properties | sed "s/^version=\(.*\)$/\1/")'
+        run: echo "::set-output name=tag::$(grep '^version=.*$' gradle.properties | sed 's/^version=\(.*\)$/\1/')"
 
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
         with:
           tag_name: ${{ steps.set-tag.outputs.tag }}
           release_name: ${{ steps.set-tag.outputs.tag }}
