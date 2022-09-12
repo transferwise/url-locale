@@ -80,7 +80,7 @@ jobs:
 
       - name: Set tag
         id: set-tag
-        run: echo "::set-output name=tag::$(grep '^version=.*$' gradle.properties | sed 's/^version=\(.*\)$/\1/')"
+        run: echo "::set-output name=tag::$(grep '^version_number=.*$' gradle.properties | sed 's/^version_number=\(.*\)$/\1/')"
 
       - name: Create Release
         id: create_release
