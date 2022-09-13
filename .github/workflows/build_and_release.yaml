@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .gradle
-          key: host-finder-gradle-${{ hashFiles( 'build.gradle') }}
+          key: url-locale-gradle-${{ hashFiles( 'build.gradle') }}
 
       - name: Run tests
         run: ./gradlew check --console=plain --no-daemon --stacktrace
@@ -54,7 +54,7 @@ jobs:
           files: ./**/build/test-results/**/*.xml
 
   release:
-    name: Create new release as draft
+    name: Create a new release
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     needs:
@@ -76,11 +76,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .gradle
-          key: host-finder-gradle-${{ hashFiles( 'build.gradle') }}}
+          key: url-locale-gradle-${{ hashFiles( 'build.gradle') }}}
 
-      - name: Determine Branch
-        id: branch
-        uses: transferwise/sanitize-branch-name@v1
+      - name: Set tag
+        id: set-tag
+        run: echo "::set-output name=tag::$(grep '^version_number=.*$' gradle.properties | sed 's/^version_number=\(.*\)$/\1/')"
 
       - name: Create Release
         id: create_release
@@ -88,10 +88,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.branch.outputs.sanitized-branch-name }}
-          release_name: Release ${{ steps.branch.outputs.sanitized-branch-name }} (Amend name post-release)
+          tag_name: ${{ steps.set-tag.outputs.tag }}
+          release_name: ${{ steps.set-tag.outputs.tag }}
           body: |
             Included the release changes:
             - Here
-          draft: true
-          prerelease: false

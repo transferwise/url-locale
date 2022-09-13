@@ -1,6 +1,6 @@
 allprojects {
     group = 'com.github.transferwise'
-    version = '8.4.0'
+    version = version_number
 }
 
 subprojects {
