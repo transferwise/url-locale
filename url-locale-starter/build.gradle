@@ -1,5 +1,8 @@
 dependencies {
-    compile project(':url-locale-core')
+    compileOnly project(':url-locale-core')
 
-    compile 'org.springframework.boot:spring-boot-autoconfigure:2.0.1.RELEASE'
+    compileOnly "org.springframework:spring-webmvc:6.0.9"
+
+    compileOnly 'org.springframework.boot:spring-boot-autoconfigure:3.1.0'
+    compileOnly 'jakarta.platform:jakarta.jakartaee-api:10.0.0'
 }
