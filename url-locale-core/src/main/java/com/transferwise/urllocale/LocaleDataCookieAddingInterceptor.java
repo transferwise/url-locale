@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -66,5 +66,4 @@ public class LocaleDataCookieAddingInterceptor implements HandlerInterceptor {
         return request.getCookies() != null && Arrays.stream(request.getCookies())
             .anyMatch(cookie -> cookieName.equals(cookie.getName()));
     }
-
 }

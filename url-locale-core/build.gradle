@@ -1,19 +1,21 @@
 ext {
     junitVersion = '5.2.0'
-    springVersion = '4.3.10.RELEASE'
+    springVersion = '6.0.9'
 }
 
 dependencies {
-    compile 'javax.servlet:javax.servlet-api:3.1.0'
-    compile "org.springframework:spring-webmvc:$springVersion"
+    compileOnly 'jakarta.platform:jakarta.jakartaee-api:10.0.0'
+    compileOnly "org.springframework:spring-webmvc:$springVersion"
 
     testImplementation 'org.assertj:assertj-core:3.19.0'
     testImplementation "org.springframework:spring-test:$springVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
     testImplementation 'org.mockito:mockito-core:2.+'
+    testImplementation 'jakarta.platform:jakarta.jakartaee-api:10.0.0'
+    testImplementation "org.springframework:spring-webmvc:$springVersion"
 
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
 }
 
 test {

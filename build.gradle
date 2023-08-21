@@ -5,12 +5,11 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'maven'
     apply plugin: 'maven-publish'
     apply plugin: 'idea'
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 
     repositories {
         maven { url 'https://jitpack.io' }
@@ -36,20 +35,6 @@ subprojects {
         publications {
             mavenJava(MavenPublication) {
                 from components.java
-            }
-        }
-    }
-
-    install {
-        repositories.mavenInstaller {
-            pom.project {
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
-                }
             }
         }
     }
